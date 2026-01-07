@@ -1,0 +1,251 @@
+name: deploy-prod
+
+# trigger: Manual run only
+on:
+  workflow_dispatch:
+    inputs:
+      bump_type:
+        description: 'Version Bump Type (Ignored if on main)'
+        required: true
+        default: 'Patch'
+        type: choice
+        options:
+          - Patch
+          - Minor
+          - Major
+
+env:
+  QT_VERSION: '6.10.1'
+  QT_ARCH: 'win64_msvc2022_64'
+  APP_EXECUTABLE: 'counter_app.exe'
+  PACKAGE_DOMAIN: 'com.compendium'
+  QML_SOURCE_DIR: 'source/ui'
+
+jobs:
+  # job 1: production deployment validation
+  prod-deployment-validation:
+    runs-on: ubuntu-latest
+    outputs:
+      new_tag: ${{ steps.calc_version.outputs.new_tag }}
+    steps:
+      - name: Checkout Repository
+        id: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 1. Validate Branch Permissions
+      - name: Validate Branch Permissions
+        run: |
+          CURRENT_BRANCH="${{ github.ref_name }}"
+
+          if [[ "$CURRENT_BRANCH" != "main" && ! "$CURRENT_BRANCH" == release/* && ! "$CURRENT_BRANCH" == hotfix/* ]]; then
+            echo "::error::Production deployment is RESTRICTED. You cannot deploy from branch '$CURRENT_BRANCH'. Only 'main' or branches starting with 'release/' or 'hotfix/' are allowed."
+            exit 1
+          fi
+          echo "Branch '$CURRENT_BRANCH' is authorized for deployment."
+
+     # 2. Check for ANY Pending PRs from release/ or hotfix/ to main
+      - name: Check for Pending PRs to main
+        if: startsWith(github.ref_name, 'release/') || startsWith(github.ref_name, 'hotfix/')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # 1. Get head branch names of ALL open PRs targeting 'main'
+          EXISTING_PRS=$(gh pr list --base main --state open --json headRefName --jq '.[].headRefName')
+          
+          # 2. Filter for branches starting with release/ or hotfix/
+          # '|| true' ensures the script doesn't fail immediately if grep finds nothing
+          CONFLICTING_BRANCHES=$(echo "$EXISTING_PRS" | grep -E '^(release|hotfix)/' || true)
+
+          # 3. If conflicting branches were found, fail the pipeline
+          if [ -n "$CONFLICTING_BRANCHES" ]; then
+            echo "::error::Deployment Locked: There are pending PRs to 'main' from the following branches:"
+            echo "$CONFLICTING_BRANCHES"
+            echo "::error::Process Violation: You must merge pending release/* or hotfix/* PRs into 'main' before deploying a new version to prevent regression."
+            exit 1
+          fi
+          
+          echo "No blocking PRs found. Proceeding..."
+
+      # 3. Calculate New Version
+      - name: Calculate New Version
+        id: calc_version
+        run: |
+          git fetch --tags
+          LATEST_TAG=$(git tag --list 'v*.*.*' --sort=-v:refname | head -n 1)
+          if [ -z "$LATEST_TAG" ]; then LATEST_TAG="v0.0.0"; fi
+          
+          # Force 'Patch' if on main, otherwise use Input
+          if [ "${{ github.ref_name }}" == "main" ]; then
+             echo "::notice::Branch is 'main'. Forcing bump type to 'Patch' regardless of input."
+             BUMP_TYPE="Patch"
+          else
+             BUMP_TYPE="${{ inputs.bump_type }}"
+          fi
+
+          VERSION=${LATEST_TAG#v}
+          IFS='.' read -r -a parts <<< "$VERSION"
+          MAJOR=${parts[0]}; MINOR=${parts[1]}; PATCH=${parts[2]}
+
+          case "$BUMP_TYPE" in
+            "Major") MAJOR=$((MAJOR + 1)); MINOR=0; PATCH=0 ;;
+            "Minor") MINOR=$((MINOR + 1)); PATCH=0 ;;
+            "Patch") PATCH=$((PATCH + 1)) ;;
+          esac
+          
+          NEW_TAG="v${MAJOR}.${MINOR}.${PATCH}"
+          echo "new_tag=$NEW_TAG" >> $GITHUB_OUTPUT
+
+      # 4. Create Job Summary
+      - name: Generate Summary
+        run: |
+          # Create a clickable link for the commit
+          COMMIT_LINK="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          
+          # Use heredoc for cleaner multi-line writing
+          cat <<EOF >> $GITHUB_STEP_SUMMARY
+          #### Deployment Context
+          **Environment**: \`production\`
+          **Status**: Ready to proceed
+          **User**: @${{ github.actor }}
+          **Branch**: [${{ github.ref_name }}](${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }})
+          **Commit**: [${{ github.sha }}]($COMMIT_LINK)
+          **Bump Type**: \`${{ inputs.bump_type }}\`
+          **New Version**: \`${{ steps.calc_version.outputs.new_tag }}\`
+          **Time stamp**: $(date -u "+%Y-%m-%d %H:%M:%S UTC")
+          EOF
+
+  # job 2: validation
+  # Calls the workflow that builds and uploads 'compiled-app'
+  validation:
+    needs: prod-deployment-validation
+    uses: ./.github/workflows/validate.yaml
+
+  # job 3: package windows application
+  # Downloads artifact from validation, creates Installer
+  package-windows-application:
+    needs: [validation, prod-deployment-validation]
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      VERSION_TAG: ${{ needs.prod-deployment-validation.outputs.new_tag }}
+      INSTALLER_NAME: "compendium-${{ needs.prod-deployment-validation.outputs.new_tag }}-Windows-x64.exe"
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Qt (IFW)
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: ${{ env.QT_ARCH }}
+          tools: 'tools_ifw'
+
+      # 1. Download the artifact produced by 'validation'
+      - name: Download Binaries from Validation
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-app  # MATCHES NAME IN VALIDATE YAML
+          path: staging
+
+      # 2. Locate the Exe (Since 'compiled-app' contains the whole 'build/' folder)
+      - name: Locate and Move Executable
+        run: |
+          # Find the .exe recursively inside the staging folder
+          $exeFile = Get-ChildItem -Path "staging" -Filter $env:APP_EXECUTABLE -Recurse | Select-Object -First 1
+          
+          if (-not $exeFile) {
+             Write-Error "Could not find '$env:APP_EXECUTABLE' inside the downloaded artifact!"
+             exit 1
+          }
+          
+          Write-Host "Found executable at: $($exeFile.FullName)"
+          
+          # Move it to a clean "deploy" folder to simplify windeployqt
+          New-Item -ItemType Directory -Force -Path "deploy"
+          Move-Item -Path $exeFile.FullName -Destination "deploy\$env:APP_EXECUTABLE"
+
+      - name: Run Windeployqt
+        run: |
+          $exePath = "deploy\$env:APP_EXECUTABLE"
+          windeployqt --release --compiler-runtime --no-translations --no-opengl-sw --qmldir $env:QML_SOURCE_DIR $exePath
+          Remove-Item "deploy\*.obj", "deploy\*.cpp", "deploy\*.h" -ErrorAction SilentlyContinue
+
+      - name: Build Installer (IFW)
+        run: |
+          $targetDir = "installer\packages\$env:PACKAGE_DOMAIN\data"
+          New-Item -ItemType Directory -Force -Path $targetDir
+          
+          # Copy the deployed files (dlls + exe) to IFW data
+          Copy-Item -Path "deploy\*" -Destination $targetDir -Recurse
+
+          $binCreator = Get-ChildItem -Path "..\Qt\Tools\QtInstallerFramework\*\bin\binarycreator.exe" | Select-Object -First 1 -ExpandProperty FullName
+          
+          cd installer
+          & $binCreator -c config\config.xml -p packages\ $env:INSTALLER_NAME
+          
+          echo "INSTALLER_PATH=installer\$env:INSTALLER_NAME" >> $env:GITHUB_ENV
+
+      - name: Upload Installer Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-package
+          path: ${{ env.INSTALLER_PATH }}
+
+  # job 4: produce github tag and release
+  create-github-tag-and-release:
+    needs: [package-windows-application, prod-deployment-validation]
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download Installer
+        uses: actions/download-artifact@v4
+        with:
+          name: installer-package
+          path: dist
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.prod-deployment-validation.outputs.new_tag }}
+        run: |
+          gh release create $TAG \
+            dist/*.exe \
+            --title "$TAG" \
+            --notes "Production deployment initiated manually from **${{ github.ref_name }}**." \
+            --latest
+
+  # job 5: create sync pull request to main
+  create-sync-pull-request:
+    needs: [create-github-tag-and-release, prod-deployment-validation]
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Sync PR
+        if: startsWith(github.ref_name, 'release/') || startsWith(github.ref_name, 'hotfix/')
+        env:
+          GH_TOKEN: ${{ secrets.compendium_AUTO_PR }}
+          TAG: ${{ needs.prod-deployment-validation.outputs.new_tag }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "${{ github.ref_name }}" \
+            --title "chore(${{ github.ref_name }}): Sync $TAG to main" \
+            --body "Automated PR created after production deployment of **$TAG**."
+
+      - name: Log Sync Skip
+        if: github.ref_name == 'main'
+        run: |
+          echo "::notice title=Sync Skipped::Current branch is 'main'. No back-sync PR is required."

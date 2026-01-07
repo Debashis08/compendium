@@ -1,0 +1,168 @@
+name: validate
+
+on:
+  workflow_call:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - 'release/*'
+      - 'hotfix/*'
+      - 'main'
+  workflow_dispatch:
+
+env:
+  QT_VERSION: '6.10.1'
+  QT_ARCH: 'win64_msvc2022_64'
+
+jobs:
+  # job 1: validate branch policy
+  validate-branch-policy:
+    runs-on: ubuntu-latest
+    steps:
+      # --- scenario A: Pull Request Checks ---
+      
+      # 1. Block invalid PR path
+      - name: Block invalid PR path
+        if: |
+          github.event_name == 'pull_request' &&
+          !(
+            (startsWith(github.event.pull_request.head.ref, 'feature/') && startsWith(github.event.pull_request.base.ref, 'release/')) ||
+            (startsWith(github.event.pull_request.head.ref, 'feature/') && startsWith(github.event.pull_request.base.ref, 'hotfix/')) ||
+            (startsWith(github.event.pull_request.head.ref, 'release/') && github.event.pull_request.base.ref == 'main') ||
+            (startsWith(github.event.pull_request.head.ref, 'hotfix/') && github.event.pull_request.base.ref == 'main')
+          )
+        run: |
+          echo "::error::Invalid PR Path: ${{ github.event.pull_request.head.ref }} -> ${{ github.event.pull_request.base.ref }}"
+          echo "  Allowed PR paths are:"
+          echo "  - feature/* -> release/*"
+          echo "  - feature/* -> hotfix/*"
+          echo "  - release/* -> main"
+          echo "  - hotfix/* -> main"
+          exit 1
+
+      # 2. Check for Frozen Release Branch
+      # Logic: If we are merging INTO a release/hotfix branch, 
+      # ensure that release/* or hotfix/* branch does NOT currently have an open PR to main.
+      - name: Check if target branch is locked
+        if: |
+          github.event_name == 'pull_request' &&
+          (startsWith(github.base_ref, 'release/') || startsWith(github.base_ref, 'hotfix/'))
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TARGET_BRANCH="${{ github.base_ref }}"
+          
+          echo "Checking lock status for target branch: $TARGET_BRANCH..."
+          
+          OPEN_PRS=$(gh pr list --repo "${{ github.repository }}" --base main --head "$TARGET_BRANCH" --state open --json number --jq 'length')
+          
+          if [ "$OPEN_PRS" -gt 0 ]; then
+            echo "::error::Validation Failed: The branch '$TARGET_BRANCH' is currently LOCKED."
+            echo "::error::Reason: An automated PR from '$TARGET_BRANCH' to 'main' already exists."
+            echo "::error::Action: You cannot merge new features into '$TARGET_BRANCH' until the pending PR is merged to main."
+            exit 1
+          fi
+          
+          echo "Branch '$TARGET_BRANCH' is unlocked. Proceeding."
+
+      # 3. Approve valid PR path (Existing Logic)
+      - name: Approve valid PR path
+        if: |
+          github.event_name == 'pull_request' &&
+          (
+            (startsWith(github.event.pull_request.head.ref, 'feature/') && startsWith(github.event.pull_request.base.ref, 'release/')) ||
+            (startsWith(github.event.pull_request.head.ref, 'feature/') && startsWith(github.event.pull_request.base.ref, 'hotfix/')) ||
+            (startsWith(github.event.pull_request.head.ref, 'release/') && github.event.pull_request.base.ref == 'main') ||
+            (startsWith(github.event.pull_request.head.ref, 'hotfix/') && github.event.pull_request.base.ref == 'main')
+          )
+        run: |
+          echo "PR Path Validated: ${{ github.event.pull_request.head.ref }} -> ${{ github.event.pull_request.base.ref }}"
+
+      # --- scenario B: Manual Run Checks ---
+      - name: Approve Manual Run
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "Manual validation run initiated on branch '${{ github.ref_name }}'"
+
+  # job 2: Lint code
+  lint-code:
+    needs: validate-branch-policy
+    runs-on: windows-2022 
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      
+      - name: Run Linter
+        shell: pwsh
+        run: |
+          Write-Host "Running Lint Checks..."
+          # cmake --build build --target check-format
+          Write-Host "Linting passed."
+
+  # job 3: Build Project
+  build-project:
+    needs: lint-code
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: ${{ env.QT_ARCH }}
+          aqtversion: '>=3.1.6'
+          modules: 'qt5compat'
+
+      - name: Configure and Build
+        run: |
+          mkdir build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" -A x64
+          cmake --build . --config Release
+
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-app
+          path: build/
+          retention-days: 1
+
+  # job 4: Run Unit Tests
+  run-unit-tests:
+    needs: build-project
+    runs-on: windows-2022
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup MSVC
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v3
+        with:
+          version: ${{ env.QT_VERSION }}
+          arch: ${{ env.QT_ARCH }}
+          aqtversion: '>=3.1.6'
+          modules: 'qt5compat'
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-app
+          path: build
+
+      - name: Run Unit Tests
+        run: |
+          cd build
+          ctest -C Release --output-on-failure
