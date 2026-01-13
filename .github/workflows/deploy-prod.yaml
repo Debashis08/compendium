@@ -233,10 +233,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create Sync PR
+      - name: Create Pull Request to Sync main
         if: startsWith(github.ref_name, 'release/') || startsWith(github.ref_name, 'hotfix/')
         env:
-          GH_TOKEN: ${{ secrets.compendium_AUTO_PR }}
+          GH_TOKEN: ${{ secrets.COMPENDIUM_AUTO_PR }}
           TAG: ${{ needs.prod-deployment-validation.outputs.new_tag }}
         run: |
           gh pr create \
