@@ -247,7 +247,7 @@ jobs:
       - name: Create Sync pull request to main
         if: startsWith(github.ref_name, 'release/') || startsWith(github.ref_name, 'hotfix/')
         env:
-          GH_TOKEN: ${{ secrets.POCQTQUICK_AUTO_PR }}
+          GH_TOKEN: ${{ secrets.COMPENDIUM_AUTO_PR }}
           TAG: ${{ needs.prod-deployment-validation.outputs.new_tag }}
         run: |
           gh pr create \
