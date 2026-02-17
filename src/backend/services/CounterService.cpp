@@ -1,43 +1,42 @@
 #include "CounterService.h"
-#include <QDebug>          // Needed for qInfo, qDebug
+#include <QDebug>
 
-// If these macros aren't defined by CMake, provide fallback strings
+// Fallbacks for Secrets
 #ifndef CLIENT_ID
-    #define CLIENT_ID "default_id_placeholder"
+    #define CLIENT_ID "default_client_id_placeholder"
 #endif
-
 #ifndef CLIENT_SECRET
-    #define CLIENT_SECRET "default_secret_placeholder"
+    #define CLIENT_SECRET "default_client_secret_placeholder"
 #endif
 
-CounterService::CounterService() : m_count(0) {}
+CounterService::CounterService(QObject* parent) : ICounterService(parent), _count(0) {}
 
-void CounterService::increment() {
-    qDebug()<<"CounterService - increment started";
-    m_count++;
-    qInfo()<<"Counter incremented. New Value"<<m_count;
-    qDebug()<<"CounterService - increment finished";
+void CounterService::increment()
+{
+    _count++;
+    qInfo() << "Counter incremented to" << _count;
+    // Emit signal defined in Interface
+    emit countChanged(_count);
 }
 
-void CounterService::decrement() {
-    qDebug()<<"CounterService - decrement started";
-    m_count--;
-    qCritical()<<"Counter decremented. New Value"<<m_count;
-    qDebug()<<"CounterService - decrement finished";
+void CounterService::decrement()
+{
+    _count--;
+    qInfo() << "Counter decremented to" << _count;
+    emit countChanged(_count);
 }
 
-int CounterService::value() const {
-    return m_count;
+int CounterService::count() const
+{
+    return _count;
 }
 
-// --- NEW IMPLEMENTATIONS ---
-
-std::string CounterService::getClientId() const {
-    // Returns the value injected by the compiler/CMake
+std::string CounterService::getClientId() const
+{
     return CLIENT_ID;
 }
 
-std::string CounterService::getClientSecret() const {
-    // Returns the value injected by the compiler/CMake
+std::string CounterService::getClientSecret() const
+{
     return CLIENT_SECRET;
 }

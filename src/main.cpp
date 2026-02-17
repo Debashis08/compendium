@@ -1,33 +1,24 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-//#include <QQuickStyle>
-#include "backend/core/LoggerService.h"
+#include "core/ServiceInitializer.h" // <-- UPDATED
 
 int main(int argc, char *argv[])
 {
-    // QQuickStyle::setStyle("Material");
-    
     qputenv("QT_QUICK_CONTROLS_CONF", ":/compendium-qtquickcontrols2.conf");
-    
     QGuiApplication app(argc, argv);
 
-    // 1. Initialize Logger FIRST
-    LoggerService::init();
-
-    qInfo() << "Application Starting"; // This will now go to your file!
+    // service initializer called to create all the requried services
+    ServiceInitializer initializer;
+    initializer.initialize();
 
     QQmlApplicationEngine engine;
-
-    // --- FIX IS HERE ---
-    // Manually add the resource root to the import path.
-    // This allows "App.Ui" to find its sibling "App.Backend".
     engine.addImportPath(":/qt/qml");
-    // -------------------
-
     engine.loadFromModule("App.Ui", "Main");
 
     if (engine.rootObjects().isEmpty())
+    {
         return -1;
+    }
 
     return app.exec();
 }
