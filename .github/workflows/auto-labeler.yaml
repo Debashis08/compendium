@@ -16,17 +16,16 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
-      # 1. Standard File-based Labeler (Contest vs Problemset)
+      # Standard file-based labeler
       - name: Assign Labels Based on Changes
         id: labeler
         uses: actions/labeler@v5
         with:
-          # This tells it to look at your .github/labeler.yaml
           configuration-path: .github/labeler.yaml
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
           sync-labels: true
 
-      # 2. NEW: Branch-based Labeler (Ignore Release Branches)
+      # Branch-based labeler (Ignore Release Branches)
       - name: Label Release PRs to Skip Changelog
         # Only run if the source branch starts with 'release/'
         if: startsWith(github.head_ref, 'release/')
