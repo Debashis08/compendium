@@ -27,7 +27,7 @@ for %%I in ("%SCRIPT_DIR%\..") do set "REPO_ROOT=%%~fI"
 :: Project paths
 set "SOURCE_DIR=%REPO_ROOT%"
 set "QML_DIR=%SOURCE_DIR%\src\ui"
-set "APP_NAME=appCounterApp.exe"
+set "APP_NAME=compendium.exe"
 
 :: [CHANGED] Inno Setup output filename (No .exe extension here, Inno adds it)
 set "INSTALLER_BASENAME=compendium-installer-Windows-x64"

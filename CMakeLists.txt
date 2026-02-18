@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(CounterApp VERSION 0.1 LANGUAGES CXX)
+project(compendium VERSION 0.1 LANGUAGES CXX)
 
 # Tell CMake to look for .cmake files in the "cmake" folder
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
