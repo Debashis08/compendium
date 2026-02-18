@@ -67,7 +67,8 @@ jobs:
     needs: validate-branch-policy
     runs-on: windows-2022 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
       - name: Run Linter
         shell: pwsh
         run: Write-Host "Linting passed."
