@@ -5,12 +5,13 @@ import "pages"
 
 Window
 {
-    width: 640
-    height: 480
+    width: 1080
+    height: 720
     visible: true
-    title: qsTr("Professional Counter App")
+    title: qsTr("compendium")
 
-    CounterPage {
+    WelcomePage
+    {
         anchors.fill: parent
     }
 }

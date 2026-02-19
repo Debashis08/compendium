@@ -6,13 +6,12 @@ qt_add_qml_module(UiLib
     # Standardizes the resource path
     RESOURCE_PREFIX "/qt/qml"
 
-    # Redirect build output to a staging folder that matches the URI
-    # OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/staging/App/Ui"
-
+    # Declare the qml files.
     QML_FILES
         Main.qml
         pages/CounterPage.qml
         components/StandardButton.qml
+        pages/WelcomePage.qml
 )
 
 target_link_libraries(UiLib PRIVATE Qt6::Quick)

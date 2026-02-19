@@ -14,21 +14,27 @@ find_package(Qt6 REQUIRED COMPONENTS Quick Qml)
 
 # Define Source Files
 set(BACKEND_SOURCES
+
+    # interface
     interfaces/ICounterService.h
     
+    # core
     core/LoggerService.h
     core/LoggerService.cpp
-    
     core/ServiceProvider.h         
     core/ServiceProvider.cpp       
     core/ServiceInitializer.h     
     core/ServiceInitializer.cpp   
     
+    # services
     services/CounterService.cpp
     services/CounterService.h
-    
+
+    # viewmodels
     viewmodels/CounterViewModel.cpp
     viewmodels/CounterViewModel.h
+    viewmodels/WelcomeViewModel.h
+    viewmodels/WelcomeViewModel.cpp
 )
 
 # Create QML Module
@@ -39,13 +45,13 @@ qt_add_qml_module(BackendLib
     SOURCES ${BACKEND_SOURCES}
 )
 
-# Inject Secrets into C++
+# Inject Secrets into backend
 target_compile_definitions(BackendLib PRIVATE
     CLIENT_ID="${GOOGLE_CLIENT_ID}"
     CLIENT_SECRET="${GOOGLE_CLIENT_SECRET}"
 )
 
-# Include Directories
+# Include directories
 target_include_directories(BackendLib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
