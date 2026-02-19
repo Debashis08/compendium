@@ -1,7 +1,7 @@
 # tests/CMakeLists.txt
 
 # Create a project for tests
-project(CounterAppTests LANGUAGES CXX)
+project(compendiumTests LANGUAGES CXX)
 
 enable_testing()
 # Find the Test module (Required for QTest)
