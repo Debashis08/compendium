@@ -11,7 +11,8 @@ qt_add_qml_module(UiLib
         Main.qml
         pages/CounterPage.qml
         components/StandardButton.qml
-        pages/WelcomePage.qml
+        components/WelcomeScreen.qml
+        components/MainDashBoard.qml
 )
 
 target_link_libraries(UiLib PRIVATE Qt6::Quick)
