@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
     initializer.initialize();
 
     QQmlApplicationEngine engine;
+
     engine.addImportPath(":/qt/qml");
     engine.loadFromModule("App.Ui", "Main");
 
