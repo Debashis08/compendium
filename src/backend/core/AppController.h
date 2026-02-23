@@ -4,9 +4,8 @@
 #include <QObject>
 #include <QString>
 #include <QtStateMachine/QStateMachine>
-#include <QtStateMachine/QState>
-#include <QTimer>
 #include <QSettings>
+#include <QTimer>
 #include <QDir>
 #include <QDebug>
 
@@ -19,12 +18,12 @@ class AppController : public QObject
 public:
     explicit AppController(QObject *parent = nullptr);
 
-    QString currentState() const { return _currentState; }
-    QString workspacePath() const { return _workspacePath; }
+    QString currentState() const;
+    QString workspacePath() const;
 
 public slots:
-    // Called by QML when the user selects a folder in the Welcome screen
-    void setWorkspacePath(const QString &path);
+    // This slot is called by QML when user selects a folder in the Welcome Screen
+    void setWorkspacePath(const QString& path);
 
 signals:
     // State machine driver signals
@@ -39,9 +38,9 @@ signals:
 private:
     void setupStateMachine();
     void checkInitialWorkspace();
-    void setCurrentState(const QString &stateName);
+    void setCurrentState(const QString& currentState);
 
-    QStateMachine *_machine;
+    QStateMachine* _machine;
     QString _currentState;
     QString _workspacePath;
     QSettings _settings;

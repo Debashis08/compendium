@@ -1,80 +1,103 @@
+#include "AppConstants.h"
 #include "AppController.h"
 
 AppController::AppController(QObject *parent) : QObject(parent)
 {
-    // 1. Load data from settings
-    _workspacePath = _settings.value("user/workspace", "").toString();
+    // Load workspace path if already set in settings
+    this->_workspacePath = this->_settings.value(AppConstants::Storage::SettingsKeyWorkspace, "").toString();
 
-    // 2. Initialize and start the state machine
-    setupStateMachine();
+    // Set up the stateMachine and the states
+    this->setupStateMachine();
 }
 
-void AppController::setupStateMachine() {
-    _machine = new QStateMachine(this);
-
-    // Create States
-    QState *initState = new QState(_machine);
-    QState *welcomeState = new QState(_machine);
-    QState *mainAppState = new QState(_machine);
-
-    // --- State Entry Actions ---
-    // Update the exposed QML property when states are entered
-    connect(initState, &QState::entered, this, [this]() {
-        setCurrentState("Init");
-        // Use a timer to allow the UI to load before checking,
-        // or check immediately. We check on the next event loop iteration.
-        QTimer::singleShot(0, this, &AppController::checkInitialWorkspace);
-    });
-
-    connect(welcomeState, &QState::entered, this, [this]() {
-        setCurrentState("Welcome");
-    });
-
-    connect(mainAppState, &QState::entered, this, [this]() {
-        setCurrentState("MainWorkspace");
-    });
-
-    // --- State Transitions ---
-    // From Init -> either Welcome or Main
-    initState->addTransition(this, &AppController::checkCompletedNeedsSetup, welcomeState);
-    initState->addTransition(this, &AppController::checkCompletedReady, mainAppState);
-
-    // From Welcome -> Main (triggered when user selects a folder)
-    welcomeState->addTransition(this, &AppController::workspaceConfigured, mainAppState);
-
-    // Start the machine
-    _machine->setInitialState(initState);
-    _machine->start();
+QString AppController::currentState() const
+{
+    return this->_currentState;
 }
 
-void AppController::checkInitialWorkspace() {
-    if (!_workspacePath.isEmpty() && QDir(_workspacePath).exists()) {
-        emit checkCompletedReady(); // Drives machine to mainAppState
-    } else {
-        emit checkCompletedNeedsSetup(); // Drives machine to welcomeState
+QString AppController::workspacePath() const
+{
+    return this->_workspacePath;
+}
+
+void AppController::setupStateMachine()
+{
+    // Create the stateMachine.
+    this->_machine = new QStateMachine();
+
+    // Create the states.
+    QState* initialState = new QState(this->_machine);
+    QState* welcomeState = new QState(this->_machine);
+    QState* workspaceState = new QState(this->_machine);
+
+
+    connect(initialState, &QState::entered, this, [this] () {
+        this->setCurrentState("initialState");
+        QTimer::singleShot(AppConstants::Storage::LoadingScreenTime, this, &AppController::checkInitialWorkspace);
+    });
+
+    connect(welcomeState, &QState::entered, this, [this] () {
+        this->setCurrentState("welcomeState");
+    });
+
+    connect(workspaceState, &QState::entered, this, [this] () {
+        this->setCurrentState("workspaceState");
+    });
+
+    // State transitions.
+    // From initialState -> either welcomeState or workspaceState
+    initialState->addTransition(this, &AppController::checkCompletedNeedsSetup, welcomeState);
+    initialState->addTransition(this, &AppController::checkCompletedReady, workspaceState);
+
+    // From welcomState -> workspaceState, when initially user was on welcome screen, user selected a folder as workspace
+    welcomeState->addTransition(this, &AppController::workspaceConfigured, workspaceState);
+
+    // Set the initial state in the machine.
+    this->_machine->setInitialState(initialState);
+
+    // Start the state machine.
+    this->_machine->start();
+}
+
+void AppController::checkInitialWorkspace()
+{
+    if(!this->_workspacePath.isEmpty() && QDir(this->_workspacePath).exists())
+    {
+        emit this->checkCompletedReady();
+    }
+    else
+    {
+        emit this->checkCompletedNeedsSetup();
     }
 }
 
-void AppController::setWorkspacePath(const QString &path) {
-    // Clean up file:/// prefix
-    QString cleanPath = path;
-    if (cleanPath.startsWith("file://")) cleanPath.remove(0, 7);
-#ifdef Q_OS_WIN
-    if (cleanPath.startsWith("/")) cleanPath.remove(0, 1);
+void AppController::setCurrentState(const QString& currentState)
+{
+    if(this->_currentState != currentState)
+    {
+        this->_currentState = currentState;
+    }
+    qInfo() << "App state changed to: "<<this->_currentState;
+    emit this->currentStateChanged();
+}
+
+void AppController::setWorkspacePath(const QString& path)
+{
+    QString modifiedPath = path;
+    if(modifiedPath.startsWith("file://"))
+    {
+        modifiedPath.remove(0, 7);
+    }
+
+#ifndef Q_OS_WIN
+    if(modifiedPath.startsWith("/"))
+    {
+        modifiedPath.remove(0, 1);
+    }
 #endif
 
-    _workspacePath = cleanPath;
-    _settings.setValue("user/workspace", _workspacePath);
-    emit workspacePathChanged();
+    this->_workspacePath = path;
+    this->_settings.setValue(AppConstants::Storage::SettingsKeyWorkspace, this->_workspacePath);
 
-    // Tell the state machine the user finished setup
-    emit workspaceConfigured();
-}
-
-void AppController::setCurrentState(const QString &stateName) {
-    if (_currentState != stateName) {
-        _currentState = stateName;
-        qDebug() << "App State Changed to:" << _currentState;
-        emit currentStateChanged();
-    }
+    emit this->workspaceConfigured();
 }

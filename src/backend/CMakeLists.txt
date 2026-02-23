@@ -19,6 +19,7 @@ set(BACKEND_SOURCES
     interfaces/ICounterService.h
     
     # core
+    core/AppConstants.h
     core/LoggerService.h
     core/LoggerService.cpp
     core/ServiceProvider.h         

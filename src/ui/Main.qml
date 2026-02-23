@@ -22,7 +22,7 @@ Window {
         // 2. BIND STATE TO C++
         // This is the magic line. It listens to the C++ State Machine.
         // If AppController sets state to "Welcome", this QML state automatically updates.
-        state: ServiceProvider.appController ? ServiceProvider.appController.currentState : "Init"
+        state: ServiceProvider.appController ? ServiceProvider.appController.currentState : "initialState"
 
         // 3. THE LOADER
         Loader {
@@ -36,15 +36,15 @@ Window {
         // These names MUST match the strings in AppController.cpp (setCurrentState)
         states: [
             State {
-                name: "Init"
+                name: "initialState"
                 PropertyChanges { target: mainLoader; sourceComponent: splashScreenComp }
             },
             State {
-                name: "Welcome"
+                name: "welcomeState"
                 PropertyChanges { target: mainLoader; sourceComponent: welcomeScreenComp }
             },
             State {
-                name: "MainWorkspace"
+                name: "workspaceState"
                 PropertyChanges { target: mainLoader; sourceComponent: mainDashboardComp }
             }
         ]
