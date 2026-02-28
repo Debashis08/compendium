@@ -9,7 +9,7 @@ Window {
     width: 1080
     height: 720
     visible: true
-    title: "Compendium"
+    title: UiConstants.appName
 
     // Optional: Default background color for the whole window
     // color: "#1E1E1E"
