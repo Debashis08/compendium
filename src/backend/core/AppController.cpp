@@ -89,14 +89,14 @@ void AppController::setWorkspacePath(const QString& path)
         modifiedPath.remove(0, 7);
     }
 
-#ifndef Q_OS_WIN
+#ifdef Q_OS_WIN
     if(modifiedPath.startsWith("/"))
     {
         modifiedPath.remove(0, 1);
     }
 #endif
 
-    this->_workspacePath = path;
+    this->_workspacePath = modifiedPath;
     this->_settings.setValue(AppConstants::Storage::SettingsKeyWorkspace, this->_workspacePath);
 
     emit this->workspaceConfigured();
