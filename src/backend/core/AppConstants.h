@@ -6,6 +6,6 @@ namespace AppConstants
     namespace Storage
     {
         inline const QString SettingsKeyWorkspace = "user/workspace";
-        inline const int LoadingScreenTime = 5000;
+        inline const int LoadingScreenTime = 0;
     }
 }
