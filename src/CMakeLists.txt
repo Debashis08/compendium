@@ -18,6 +18,7 @@ target_link_libraries(compendium
     PRIVATE
     Qt6::Quick
     Qt6::QuickControls2
+    Qt6::StateMachine
     BackendLib
     # critical
     BackendLibplugin

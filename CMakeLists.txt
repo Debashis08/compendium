@@ -8,7 +8,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 COMPONENTS Quick Test QuickTest QuickControls2 REQUIRED)
+find_package(Qt6 COMPONENTS Quick Test QuickTest QuickControls2 StateMachine REQUIRED)
 
 # QTP0001: Use the modern resource path ":/qt/qml/" by default
 qt_policy(SET QTP0001 NEW)
