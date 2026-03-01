@@ -129,7 +129,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           arch: ${{ env.QT_ARCH }}
           aqtversion: '>=3.1.6'
-          modules: 'qt5compat'
+          modules: 'qt5compat qtscxml'
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress
