@@ -139,7 +139,7 @@ jobs:
           version: ${{ env.QT_VERSION }}
           arch: ${{ env.QT_ARCH }}
           aqtversion: '>=3.1.6'
-          modules: 'qt5compat qtstatemachine qtscxml'
+          modules: 'qt5compat qtscxml'
 
       - name: Configure and Build
         # Inject Secrets here so CMake can read them
