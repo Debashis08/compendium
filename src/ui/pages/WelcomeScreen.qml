@@ -8,14 +8,14 @@ import App.Backend 1.0
 Item {
     id: root
 
-    CustomTitleBar {
-            id: titleBar
-            width: parent.width
-            anchors.top: parent.top
+    // CustomTitleBar {
+    //         id: titleBar
+    //         width: parent.width
+    //         anchors.top: parent.top
 
-            // Hide the hamburger menu since there's no sidebar here
-            showMenuButton: false
-        }
+    //         // Hide the hamburger menu since there's no sidebar here
+    //         showMenuButton: false
+    //     }
 
     Column {
         anchors.centerIn: parent
