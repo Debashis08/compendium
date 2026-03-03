@@ -9,7 +9,7 @@ Window {
     height: UiConstants.defaultMainAppWindowHeight
     visible: true
     title: UiConstants.appName
-    flags: Qt.Window | Qt.FramelessWindowHint
+    // flags: Qt.Window | Qt.FramelessWindowHint
 
     Item {
         id: rootContainer
@@ -95,4 +95,9 @@ Window {
 
         }
     }
+
+    // WindowResizeBorders {
+    //         visible: Window.window.visibility !== Window.Maximized
+    //         z: 999 // Ensure it sits above all other UI elements
+    //     }
 }

@@ -20,12 +20,15 @@ qt_add_qml_module(UiLib
         # components
         components/StandardButton.qml
 
+        # icons
+        icons/minimize.png
 
         # pages
         pages/CounterPage.qml
         pages/WelcomeScreen.qml
         pages/MainDashBoard.qml
         pages/CustomTitleBar.qml
+        pages/WindowResizeBorders.qml
 )
 
 target_link_libraries(UiLib PRIVATE Qt6::Quick)

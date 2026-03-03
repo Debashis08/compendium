@@ -6,48 +6,54 @@ import App.Backend 1.0
 Item {
     id: root
 
-    // --- USE OUR NEW TITLE BAR ---
-        CustomTitleBar {
-            id: titleBar
-            width: parent.width
-            anchors.top: parent.top
+    // --- 1. INTERNAL APP TOOLBAR ---
+    // Since Windows owns the very top title bar now, we add a small
+    // internal toolbar right below it to hold your hamburger menu.
+    Rectangle {
+        id: appToolbar
+        width: parent.width
+        height: 50
+        color: "#F3F3F3" // We can bind this to your ThemeService later!
 
-            // Turn on the menu button for the dashboard!
-            showMenuButton: true
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 10
 
-            // Connect the click signal to open the Drawer
-            onMenuClicked: sideDrawer.open()
-        }
-
-        // --- MAIN CONTENT AREA ---
-        Item {
-            id: contentArea
-            anchors.top: titleBar.bottom // Anchor below the custom title bar
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
-
-            Text {
-                anchors.centerIn: parent
-                text: "Main Dashboard\n" + ServiceProvider.appController.workspacePath
+            Button {
+                text: "☰"
                 font.pixelSize: 20
-                color: "black" // Or white if you are using a dark background
-                horizontalAlignment: Text.AlignHCenter
+                onClicked: sideDrawer.open()
             }
-        }
 
+            Item { Layout.fillWidth: true } // Pushes the button to the left
+        }
+    }
+
+    // --- 2. MAIN CONTENT AREA ---
+    Item {
+        id: contentArea
+        anchors.top: appToolbar.bottom // Anchor below our internal toolbar
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+
+        Text {
+            anchors.centerIn: parent
+            text: "Main Dashboard\n" + (ServiceProvider.appController ? ServiceProvider.appController.workspacePath : "")
+            font.pixelSize: 20
+            color: "black"
+            horizontalAlignment: Text.AlignHCenter
+        }
+    }
 
     // --- 3. THE SIDE DRAWER (MENU) ---
     Drawer {
         id: sideDrawer
-        width: parent.width * 0.2
+        width: Math.max(250, parent.width * 0.2) // Ensures it doesn't get too thin
         height: parent.height
 
-        // This ensures the drawer slides out from the left edge
-        // over the content (like Notion or a mobile app)
         edge: Qt.LeftEdge
 
-        // Drawer background
         Rectangle {
             anchors.fill: parent
             color: "#1E1E1E"
@@ -88,13 +94,10 @@ Item {
                     onClicked: {
                         console.log("Resetting workspace...")
                         sideDrawer.close()
-                        // You can implement logic later to reset the workspace in C++
-                        // and transition the state machine back to "Welcome"
                     }
                 }
 
-                // This spacer pushes the buttons to the top of the Drawer
-                Item { Layout.fillHeight: true }
+                Item { Layout.fillHeight: true } // Spacer
             }
         }
     }
