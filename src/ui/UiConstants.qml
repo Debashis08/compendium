@@ -2,6 +2,10 @@ pragma Singleton
 import QtQuick
 
 QtObject {
+    // Main.qml constants
+    readonly property int defaultMainAppWindowHeight: 720
+    readonly property int defaultMainAppWindowWidth: 1080
+
     // Layout constants
     readonly property string appName: "compendium"
     readonly property int marginSmall: 8

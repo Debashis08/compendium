@@ -1,20 +1,16 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Window
-
 import App.Backend 1.0
 
 Window {
     id: appWindow
-    width: 1080
-    height: 720
+    width: UiConstants.defaultMainAppWindowWidth
+    height: UiConstants.defaultMainAppWindowHeight
     visible: true
     title: UiConstants.appName
+    flags: Qt.Window | Qt.FramelessWindowHint
 
-    // Optional: Default background color for the whole window
-    // color: "#1E1E1E"
-
-    // ERROR FIX: 'states' belong to Item, not Window.
     Item {
         id: rootContainer
         anchors.fill: parent
