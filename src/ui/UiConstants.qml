@@ -5,9 +5,11 @@ QtObject {
     // Main.qml constants
     readonly property int defaultMainAppWindowHeight: 720
     readonly property int defaultMainAppWindowWidth: 1080
+    readonly property int minimumMainAppWindowHeight: 480
+    readonly property int minimumMainAppWindowWidth: 640
+    readonly property string appName: "compendium"
 
     // Layout constants
-    readonly property string appName: "compendium"
     readonly property int marginSmall: 8
     readonly property int marginMedium: 16
     readonly property int marginLarge: 24

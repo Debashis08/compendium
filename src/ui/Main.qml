@@ -5,9 +5,11 @@ import App.Backend 1.0
 
 Window {
     id: appWindow
+    visible: true
     width: UiConstants.defaultMainAppWindowWidth
     height: UiConstants.defaultMainAppWindowHeight
-    visible: true
+    minimumWidth: UiConstants.minimumMainAppWindowWidth
+    minimumHeight: UiConstants.minimumMainAppWindowHeight
     title: UiConstants.appName
     // flags: Qt.Window | Qt.FramelessWindowHint
 
