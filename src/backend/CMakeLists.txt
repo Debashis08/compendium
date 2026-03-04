@@ -10,25 +10,34 @@ if(NOT GOOGLE_CLIENT_ID OR NOT GOOGLE_CLIENT_SECRET)
     message(WARNING "BackendLib: Google OAuth keys are missing. Auth will not work.")
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Quick Qml)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Qml StateMachine)
 
 # Define Source Files
 set(BACKEND_SOURCES
+
+    # interface
     interfaces/ICounterService.h
     
+    # core
+    core/AppConstants.h
     core/LoggerService.h
     core/LoggerService.cpp
-    
     core/ServiceProvider.h         
     core/ServiceProvider.cpp       
     core/ServiceInitializer.h     
-    core/ServiceInitializer.cpp   
+    core/ServiceInitializer.cpp
+    core/AppController.h
+    core/AppController.cpp
     
+    # services
     services/CounterService.cpp
     services/CounterService.h
-    
+
+    # viewmodels
     viewmodels/CounterViewModel.cpp
     viewmodels/CounterViewModel.h
+
+
 )
 
 # Create QML Module
@@ -39,13 +48,13 @@ qt_add_qml_module(BackendLib
     SOURCES ${BACKEND_SOURCES}
 )
 
-# Inject Secrets into C++
+# Inject Secrets into backend
 target_compile_definitions(BackendLib PRIVATE
     CLIENT_ID="${GOOGLE_CLIENT_ID}"
     CLIENT_SECRET="${GOOGLE_CLIENT_SECRET}"
 )
 
-# Include Directories
+# Include directories
 target_include_directories(BackendLib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
@@ -58,4 +67,5 @@ target_link_libraries(BackendLib
     PRIVATE
     Qt6::Quick
     Qt6::Qml
+    Qt6::StateMachine
 )

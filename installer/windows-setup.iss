@@ -3,7 +3,7 @@
 
 #define MyAppName "compendium"
 #define MyAppPublisher "My Company"
-#define MyAppExeName "appCounterApp.exe"
+#define MyAppExeName "compendium.exe"
 
 ; Default value for local testing. In CI, this is overwritten via command line.
 #ifndef MyAppSourceDir

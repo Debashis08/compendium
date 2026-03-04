@@ -1,3 +1,5 @@
+set_source_files_properties(UiConstants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 qt_add_qml_module(UiLib
     # Explicitly state it is a STATIC lib here
     STATIC
@@ -6,13 +8,14 @@ qt_add_qml_module(UiLib
     # Standardizes the resource path
     RESOURCE_PREFIX "/qt/qml"
 
-    # Redirect build output to a staging folder that matches the URI
-    # OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/staging/App/Ui"
-
+    # Declare the qml files.
     QML_FILES
         Main.qml
+        UiConstants.qml
         pages/CounterPage.qml
         components/StandardButton.qml
+        components/WelcomeScreen.qml
+        components/MainDashBoard.qml
 )
 
 target_link_libraries(UiLib PRIVATE Qt6::Quick)

@@ -5,9 +5,13 @@
 void ServiceInitializer::initialize()
 {
     LoggerService::initialize();
-    
+
     _counterService = std::make_unique<CounterService>();
+    // AppController creation
+    _appController = std::make_unique<AppController>();
     
     // Inject into the new ServiceProvider
-    ServiceProvider::instance().setCounterService(_counterService.get());
+    auto& serviceProvider = ServiceProvider::instance();
+    serviceProvider.setCounterService(_counterService.get());
+    serviceProvider.setAppController(_appController.get());
 }

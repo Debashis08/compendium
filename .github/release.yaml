@@ -5,25 +5,25 @@ template: |
   **Full Changelog:** https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
 
 categories:
-  - title: 'UI & User Experience'
+  - title: 'User Interface changes'
     labels:
       - 'ui'
 
-  - title: 'Logic & Backend'
+  - title: 'Backend logical changes'
     labels:
       - 'backend'
     exclude-labels:
       - 'core'
 
-  - title: 'Core System Updates'
+  - title: 'Core System updates'
     labels:
       - 'core'
 
-  - title: 'Installer & Deployment'
+  - title: 'Installer and Deployment'
     labels:
       - 'installer'
 
-  - title: 'Build System'
+  - title: 'Build System updates'
     labels:
       - 'build-system'
     # Hide build changes if they are part of a feature PR
@@ -31,6 +31,14 @@ categories:
       - 'ui'
       - 'backend'
       - 'core'
+    
+  - title: 'Workflow and Tooling changes'
+    labels:
+      - 'workflows'
+
+  - title: 'Documentation updates'
+    labels:
+      - 'documentation'
 
 exclude-labels:
   - 'skip-changelog'

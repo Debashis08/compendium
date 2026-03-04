@@ -2,8 +2,8 @@
 
 ServiceProvider& ServiceProvider::instance()
 {
-    static ServiceProvider s_instance;
-    return s_instance;
+    static ServiceProvider _instance;
+    return _instance;
 }
 
 ServiceProvider* ServiceProvider::create(QQmlEngine *qmlEngine, QJSEngine *jsEngine)
@@ -19,7 +19,17 @@ void ServiceProvider::setCounterService(ICounterService* service)
     _counterService = service;
 }
 
+void ServiceProvider::setAppController(AppController* appController)
+{
+    this->_appController = appController;
+}
+
 ICounterService* ServiceProvider::counter() const
 {
     return _counterService;
+}
+
+AppController* ServiceProvider::appController() const
+{
+    return this->_appController;
 }
