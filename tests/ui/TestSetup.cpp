@@ -20,41 +20,6 @@ struct StyleConfig
 };
 static StyleConfig styleConfig;
 
-// Mock Service Definition
-class MockCounterService : public ICounterService
-{
-    Q_OBJECT
-public:
-    explicit MockCounterService(QObject *parent = nullptr) : ICounterService(parent) {}
-
-    int _count = 0;
-
-    void increment() override
-    {
-        _count++;
-        qDebug() << "Mock: Increment called. New count:" << _count;
-        emit countChanged(_count);
-    }
-
-    void decrement() override
-    {
-        _count--;
-        qDebug() << "Mock: Decrement called. New count:" << _count;
-        emit countChanged(_count);
-    }
-
-    int count() const override { return _count; }
-    std::string getClientId() const override { return "test_id"; }
-    std::string getClientSecret() const override { return "test_secret"; }
-
-    Q_INVOKABLE void reset()
-    {
-        _count = 0;
-        emit countChanged(_count);
-        qDebug() << "Mock: Service Reset -> Count is 0";
-    }
-};
-
 // Test Setup Class
 class Setup : public QObject
 {
@@ -67,15 +32,6 @@ public slots:
     {
         // Set Import Path so 'import App.Ui' works
         engine->addImportPath("qrc:/qt/qml");
-
-        // Create the Mock (Heap allocated to persist)
-        MockCounterService* mock = new MockCounterService(engine);
-
-        // Inject into C++ Backend (So ViewModel finds it)
-        ServiceProvider::instance().setCounterService(mock);
-
-        // Inject into QML (So Test can reset it)
-        engine->rootContext()->setContextProperty("MockHelper", mock);
     }
 };
 
