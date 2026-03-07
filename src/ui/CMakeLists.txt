@@ -18,13 +18,12 @@ qt_add_qml_module(UiLib
         UiConstants.qml
 
         # components
-        components/StandardButton.qml
+
 
         # icons
         icons/minimize.png
 
         # pages
-        pages/CounterPage.qml
         pages/WelcomeScreen.qml
         pages/MainDashBoard.qml
         pages/CustomTitleBar.qml

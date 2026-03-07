@@ -16,7 +16,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Qml StateMachine)
 set(BACKEND_SOURCES
 
     # interface
-    interfaces/ICounterService.h
+
     
     # core
     core/AppConstants.h
@@ -30,12 +30,12 @@ set(BACKEND_SOURCES
     core/AppController.cpp
     
     # services
-    services/CounterService.cpp
-    services/CounterService.h
+
+
 
     # viewmodels
-    viewmodels/CounterViewModel.cpp
-    viewmodels/CounterViewModel.h
+
+
 
 
 )
