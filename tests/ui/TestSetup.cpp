@@ -2,11 +2,6 @@
 #include <QQmlEngine>
 #include <QQmlContext>
 #include <QDebug>
-// #include <cstdlib> // For qputenv
-
-// Includes for your backend logic
-#include "core/ServiceProvider.h"
-#include "interfaces/ICounterService.h"
 
 // Force "BASIC" style
 // This struct ensures we set the style to "Basic" before the QGuiApplication

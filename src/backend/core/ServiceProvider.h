@@ -10,7 +10,6 @@ class ServiceProvider : public QObject
     QML_ELEMENT
     // QML will now know this as "ServiceProvider"
     QML_SINGLETON
-    Q_PROPERTY(ICounterService* counter READ counter CONSTANT)
     Q_PROPERTY(AppController* appController READ appController CONSTANT)
 
 public:
