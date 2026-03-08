@@ -32,9 +32,9 @@ Item {
         }
 
         Text {
-            text: "To get started, please select a folder to use as your workspace"
+            text: "Please create a workspace in local or Google drive"
             // Dynamic Font: 2% of window width, clamped between 14px and 24px
-            font.pixelSize: Math.max(12, Math.min(20, root.width * 0.02))
+            font.pixelSize: Math.max(8, Math.min(16, root.width * 0.02))
             color: "gray"
             horizontalAlignment: Text.AlignHCenter
 
@@ -42,35 +42,109 @@ Item {
             wrapMode: Text.WordWrap
         }
 
-        Button {
-            id: chooseWorkspaceButton
-            // text: "Choose Workspace"
+        Row{
             anchors.horizontalCenter: parent.horizontalCenter
+            // 2. Dynamic Spacing: 4% of the window height, but never smaller than 20px
+            spacing: Math.max(10, root.height * 0.04)
 
-            background: Rectangle {
-                        // Set the desired corner radius
-                        radius: 10
-                        // Set colors and borders as needed
-                        color: "white"
-                        border.color: "black"
-                        border.width: 1
 
-                        Text {
-                            id: buttonText
-                            text: qsTr("Choose Workspace")
-                            color: "black"
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            anchors.verticalCenter: parent.verticalCenter
-                            font.pixelSize: Math.max(10, Math.min(15, root.width * 0.02))
-                        }
+            Button {
+                id: chooseLocalWorkspaceButton
+                hoverEnabled: true
+                // text: "Choose Workspace"
+                // anchors.horizontalCenter: parent.horizontalCenter
+
+
+                background: Rectangle {
+                    radius: 10
+                    color: chooseLocalWorkspaceButton.hovered ? "#f0f0f0" : "white"
+                    border.color: "#707070"
+                    border.width: 1
+                }
+
+                // Use contentItem to layout the inside of the button
+                contentItem: Row {
+                    spacing: 10 // Adjust the space between the icon and the text
+                    padding: 10
+
+                    // This keeps both the icon and text perfectly centered in the button
+                    anchors.centerIn: parent
+
+                    Image {
+                        id: localSystemIcon
+                        // Replace this with the actual path to your icon
+                        // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
+                        source: "qrc:/ui/icons/local-system.png"
+
+                        width: parent.width * 0.14  // Set desired icon width
+                        height: parent.width * 0.14  // Set desired icon height
+                        fillMode: Image.PreserveAspectFit
+                        anchors.verticalCenter: parent.verticalCenter
                     }
 
-            // 6. Dynamic Button Size: 25% of window width, clamped between 200px and 400px
-            width: Math.max(100, Math.min(200, root.width * 0.25))
-            // Height is 6% of window height, but at least 40px
-            height: Math.max(30, root.height * 0.06)
+                    Text {
+                        id: crateLocalWorkspace
+                        text: qsTr("Create local workspace")
+                        color: "#707070"
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: Math.max(10, Math.min(12, root.width * 0.02))
+                    }
+                }
 
-            onClicked: workspaceDialog.open()
+                // 6. Dynamic Button Size: 25% of window width, clamped between 200px and 400px
+                width: Math.max(100, Math.min(200, root.width * 0.25))
+                // Height is 6% of window height, but at least 40px
+                height: Math.max(30, root.height * 0.06)
+
+                onClicked: workspaceDialog.open()
+            }
+
+            Button {
+                id: chooseGoogleWorkspaceButton
+                hoverEnabled: true
+
+                background: Rectangle {
+                    radius: 10
+                    color: chooseGoogleWorkspaceButton.hovered ? "#f0f0f0" : "white"
+                    border.color: "#707070"
+                    border.width: 1
+                }
+
+                // Use contentItem to layout the inside of the button
+                contentItem: Row {
+                    spacing: 10 // Adjust the space between the icon and the text
+                    padding: 10
+
+                    // This keeps both the icon and text perfectly centered in the button
+                    anchors.centerIn: parent
+
+                    Image {
+                        id: googleIcon
+                        // Replace this with the actual path to your icon
+                        // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
+                        source: "qrc:/ui/icons/google.png"
+
+                        width: parent.width * 0.14  // Set desired icon width
+                        height: parent.width * 0.14  // Set desired icon height
+                        fillMode: Image.PreserveAspectFit
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        id: loginWithGoogleButtonText
+                        text: qsTr("Log in With Google")
+                        color: "#707070"
+                        anchors.verticalCenter: parent.verticalCenter
+                        font.pixelSize: Math.max(10, Math.min(12, root.width * 0.02))
+                    }
+                }
+
+                // Dynamic Button Size
+                width: Math.max(100, Math.min(200, root.width * 0.25))
+                height: Math.max(30, root.height * 0.06)
+
+                // onClicked: workspaceDialog.open()
+            }
         }
     }
 
