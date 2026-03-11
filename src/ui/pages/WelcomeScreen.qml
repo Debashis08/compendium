@@ -60,6 +60,13 @@ Item {
                     color: chooseLocalWorkspaceButton.hovered ? "#f0f0f0" : "white"
                     border.color: "#707070"
                     border.width: 1
+
+                    Behavior on color{
+                        ColorAnimation {
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
                 }
 
                 // Use contentItem to layout the inside of the button
@@ -108,6 +115,13 @@ Item {
                     color: chooseGoogleWorkspaceButton.hovered ? "#f0f0f0" : "white"
                     border.color: "#707070"
                     border.width: 1
+
+                    Behavior on color{
+                        ColorAnimation {
+                            duration: 300
+                            easing.type: Easing.InOutQuad
+                        }
+                    }
                 }
 
                 // Use contentItem to layout the inside of the button
@@ -151,7 +165,7 @@ Item {
     // --- DIALOG ---
     FolderDialog {
         id: workspaceDialog
-        title: "Select Compendium Workspace"
+        title: "Select local workspace"
 
         onAccepted: {
             ServiceProvider.appController.setWorkspacePath(workspaceDialog.selectedFolder)

@@ -3,5 +3,6 @@
         <file>ui/Main.qml</file>
         <file>ui/icons/google.png</file>
         <file>ui/icons/local-system.png</file>
+        <file>ui/icons/compendium.png</file>
     </qresource>
 </RCC>
