@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Dialogs
+import App.Ui 1.0
 import App.Backend 1.0
 
 Item {
@@ -50,6 +51,7 @@ Item {
 
             Button {
                 id: chooseLocalWorkspaceButton
+                objectName: "localWorkspaceButton"
                 hoverEnabled: true
                 // text: "Choose Workspace"
                 // anchors.horizontalCenter: parent.horizontalCenter
@@ -108,6 +110,7 @@ Item {
 
             Button {
                 id: chooseGoogleWorkspaceButton
+                objectName: "googleWorkspaceButton"
                 hoverEnabled: true
 
                 background: Rectangle {
@@ -165,6 +168,7 @@ Item {
     // --- DIALOG ---
     FolderDialog {
         id: workspaceDialog
+        objectName: "folderDialog"
         title: "Select local workspace"
 
         onAccepted: {
