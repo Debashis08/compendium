@@ -9,6 +9,13 @@ Item {
     // 1. Ensure the root item explicitly fills its container (the Loader)
     anchors.fill: parent
 
+    property var backendController: ServiceProvider.appController
+
+        function processSelectedWorkspace(folderUrl) {
+            // 2. USE THE INJECTED PROPERTY
+            root.backendController.setWorkspacePath(folderUrl)
+        }
+
     Column {
         anchors.centerIn: parent
         // 2. Dynamic Spacing: 4% of the window height, but never smaller than 20px
@@ -172,7 +179,7 @@ Item {
         title: "Select local workspace"
 
         onAccepted: {
-            ServiceProvider.appController.setWorkspacePath(workspaceDialog.selectedFolder)
-        }
+                    root.processSelectedWorkspace(workspaceDialog.selectedFolder)
+                }
     }
 }
