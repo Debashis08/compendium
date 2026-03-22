@@ -1,10 +1,12 @@
+// tests/ui/pages/tst_WelcomeScreen.qml
 import QtQuick
 import QtTest
 import QtQuick.Controls
 import App.Ui 1.0
 import "../utils"
 
-BaseUiTestCase {
+TestCase {
+    id: tc // <-- Give the TestCase an ID so we can pass it to the helper
     name: "WelcomeScreenTests"
     when: windowShown
 
@@ -17,12 +19,9 @@ BaseUiTestCase {
         anchors.fill: parent
         visible: true
 
-        // 3. INJECT THE MOCK CONTROLLER!
+        // Mocking the backend dependency
         backendController: QtObject {
-            // This property will store whatever the UI tries to send
             property string receivedPath: ""
-
-            // This fake function matches the exact signature of your C++ method
             function setWorkspacePath(path) {
                 receivedPath = path;
             }
@@ -30,9 +29,11 @@ BaseUiTestCase {
     }
 
     // --- TESTS ---
+
     function test_01_uiElementsExist() {
-        var localBtn = findChild(welcomeScreen, "localWorkspaceButton");
-        var dialog = findChild(welcomeScreen, "folderDialog");
+        // Look how clean this is! Calling the global singleton directly.
+        var localBtn = UiTestHelper.findChild(welcomeScreen, "localWorkspaceButton");
+        var dialog = UiTestHelper.findChild(welcomeScreen, "folderDialog");
 
         verify(localBtn !== null, "FATAL: Local Workspace button not found");
         verify(dialog !== null, "FATAL: Folder dialog not found");
@@ -40,12 +41,13 @@ BaseUiTestCase {
 
     function test_02_workspaceSelectionLogic() {
         var testPath = "file:///C:/Mock/Workspace/Path";
-
-        // 1. Trigger the logic
         welcomeScreen.processSelectedWorkspace(testPath);
+        compare(welcomeScreen.backendController.receivedPath, testPath, "Controller received incorrect path");
+    }
 
-        // 2. Assert the Outcome: Check if the mock received the correct data!
-        // This guarantees your QML is wiring the data correctly to the backend interface.
-        compare(welcomeScreen.backendController.receivedPath, testPath, "The backend controller did not receive the correct path from the UI");
+    // Example of using the interaction helper:
+    function test_03_clickButton() {
+        var localBtn = UiTestHelper.findChild(welcomeScreen, "localWorkspaceButton");
+        UiTestHelper.interactWithButton(tc, localBtn); // Pass 'tc' here!
     }
 }

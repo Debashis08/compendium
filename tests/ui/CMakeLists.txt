@@ -4,9 +4,13 @@ project(UiTests LANGUAGES CXX)
 
 find_package(Qt6 REQUIRED COMPONENTS Quick QuickTest Test)
 
-# 1. Define the executable
+# 1. Define the executable AND list your QML files
+# Adding the QML files here is what forces Qt Creator to parse them
+# so they appear in the Test Explorer UI.
 qt_add_executable(tst_ui
     TestSetup.cpp
+    utils/UiTestHelper.qml
+    pages/tst_WelcomeScreen.qml
 )
 
 # 2. Link Dependencies
@@ -29,6 +33,8 @@ target_include_directories(tst_ui PRIVATE
 )
 
 # 4. Define Source Dir for QML engine
+# We append "/pages" here so the QUICK_TEST_MAIN macro specifically
+# scans the folder where your actual tst_ files are located.
 target_compile_definitions(tst_ui PRIVATE
     QUICK_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )

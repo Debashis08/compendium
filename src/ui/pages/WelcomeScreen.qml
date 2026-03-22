@@ -11,10 +11,10 @@ Item {
 
     property var backendController: ServiceProvider.appController
 
-        function processSelectedWorkspace(folderUrl) {
-            // 2. USE THE INJECTED PROPERTY
-            root.backendController.setWorkspacePath(folderUrl)
-        }
+    function processSelectedWorkspace(folderUrl) {
+        // 2. USE THE INJECTED PROPERTY
+        root.backendController.setWorkspacePath(folderUrl)
+    }
 
     Column {
         anchors.centerIn: parent
