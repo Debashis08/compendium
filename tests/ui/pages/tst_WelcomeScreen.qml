@@ -6,7 +6,7 @@ import App.Ui 1.0
 import "../utils"
 
 TestCase {
-    id: tc // <-- Give the TestCase an ID so we can pass it to the helper
+    id: tc
     name: "WelcomeScreenTests"
     when: windowShown
 
@@ -19,7 +19,7 @@ TestCase {
         anchors.fill: parent
         visible: true
 
-        // Mocking the backend dependency
+        // 1. THE MOCK: This replaces the need for initTestCase()
         backendController: QtObject {
             property string receivedPath: ""
             function setWorkspacePath(path) {
@@ -28,10 +28,18 @@ TestCase {
         }
     }
 
+    // --- SETUP & TEARDOWN ---
+
+    // Runs automatically AFTER all tests in this file have finished
+    function cleanupTestCase() {
+        // Give the native Windows dialog thread 50ms to shut down cleanly
+        // This prevents the "QWindowsDialogHelperBase... Thread failed to finish" warning.
+        tc.wait(50);
+    }
+
     // --- TESTS ---
 
     function test_01_uiElementsExist() {
-        // Look how clean this is! Calling the global singleton directly.
         var localBtn = UiTestHelper.findChild(welcomeScreen, "localWorkspaceButton");
         var dialog = UiTestHelper.findChild(welcomeScreen, "folderDialog");
 
@@ -45,9 +53,8 @@ TestCase {
         compare(welcomeScreen.backendController.receivedPath, testPath, "Controller received incorrect path");
     }
 
-    // Example of using the interaction helper:
     function test_03_clickButton() {
         var localBtn = UiTestHelper.findChild(welcomeScreen, "localWorkspaceButton");
-        UiTestHelper.interactWithButton(tc, localBtn); // Pass 'tc' here!
+        UiTestHelper.interactWithButton(tc, localBtn);
     }
 }

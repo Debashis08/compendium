@@ -11,6 +11,8 @@ qt_add_executable(tst_ui
     TestSetup.cpp
     utils/UiTestHelper.qml
     pages/tst_WelcomeScreen.qml
+
+    ${CMAKE_SOURCE_DIR}/src/resources.qrc
 )
 
 # 2. Link Dependencies
