@@ -1,5 +1,6 @@
 qt_add_executable(compendium
     main.cpp
+    resources.qrc
 )
 
 # This embeds the file at the root path ":/" which is where Qt looks for it.

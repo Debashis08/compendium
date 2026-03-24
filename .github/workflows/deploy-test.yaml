@@ -131,7 +131,7 @@ jobs:
       - name: Build Installer
         run: |
           $ts = "${{ needs.generate-timestamp.outputs.ts }}"
-          $installerName = "compendium-dev-installer-$ts"
+          $installerName = "compendium-test-installer-$ts"
           
           # 1. Get the Absolute Path to the staged-data folder
           # This prevents the "installer/staged-data" path error

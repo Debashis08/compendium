@@ -1,3 +1,4 @@
+# setting the UiConstants.qml as singleton
 set_source_files_properties(UiConstants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
 
 qt_add_qml_module(UiLib
@@ -8,14 +9,24 @@ qt_add_qml_module(UiLib
     # Standardizes the resource path
     RESOURCE_PREFIX "/qt/qml"
 
-    # Declare the qml files.
+    # Declare the qml files
     QML_FILES
+        # Main qml file
         Main.qml
+
+        # qml constants file
         UiConstants.qml
-        pages/CounterPage.qml
-        components/StandardButton.qml
-        components/WelcomeScreen.qml
-        components/MainDashBoard.qml
+
+
+        # components
+
+
+
+        # pages
+        pages/WelcomeScreen.qml
+        pages/MainDashBoard.qml
+        pages/CustomTitleBar.qml
+        pages/WindowResizeBorders.qml
 )
 
 target_link_libraries(UiLib PRIVATE Qt6::Quick)

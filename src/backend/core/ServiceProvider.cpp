@@ -14,19 +14,9 @@ ServiceProvider* ServiceProvider::create(QQmlEngine *qmlEngine, QJSEngine *jsEng
     return &instance();
 }
 
-void ServiceProvider::setCounterService(ICounterService* service)
-{
-    _counterService = service;
-}
-
 void ServiceProvider::setAppController(AppController* appController)
 {
     this->_appController = appController;
-}
-
-ICounterService* ServiceProvider::counter() const
-{
-    return _counterService;
 }
 
 AppController* ServiceProvider::appController() const
