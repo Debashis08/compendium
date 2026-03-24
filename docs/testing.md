@@ -16,18 +16,20 @@ All shared UI test logic (component discovery, standardized button clicks) lives
 
 **Usage in tests:**
 
-QML
-
 ```qml
 import QtTest
-import "../utils" // Imports the helper singleton
+// Imports the helper singleton
+import "../utils"
 
-TestCase {
+TestCase
+{
     name: "ExampleTest"
     
-    function test_clickButton() {
+    function test_clickButton()
+    {
         var btn = UiTestHelper.findChild(myComponent, "submitButton");
-        UiTestHelper.interactWithButton(tc, btn); // Pass 'tc' for execution context
+        // Pass 'tc' for execution context
+        UiTestHelper.interactWithButton(tc, btn);
     }
 }
 ```
@@ -40,9 +42,7 @@ UI components should never call global C++ singletons directly (e.g., `ServicePr
 
 *Production QML:*
 
-QML
-
-```json
+```qml
 property var backendController: ServiceProvider.appController
 // ...
 backendController.setWorkspacePath(folderUrl)
@@ -50,9 +50,7 @@ backendController.setWorkspacePath(folderUrl)
 
 *Test QML:*
 
-QML
-
-```json
+```qml
 backendController: QtObject {
     property string receivedPath: ""
     function setWorkspacePath(path) { receivedPath = path; }
@@ -65,12 +63,10 @@ When adding new tests or resources, `tests/ui/CMakeLists.txt` must be updated co
 
 ### Registering Test Files
 
-Do not use `add_test()`. Use `qt_add_test()` and explicitly list all `.qml` files so the Qt Creator code model indexes them.
+Use `qt_add_executable()` and explicitly list all `.qml` files so the Qt Creator code model indexes them.
 
-CMake
-
-```json
-qt_add_test(NAME tst_ui
+```cmake
+qt_add_executable(NAME tst_ui
     TestSetup.cpp
     utils/UiTestHelper.qml
     pages/tst_MyNewTest.qml
@@ -81,20 +77,28 @@ qt_add_test(NAME tst_ui
 
 If the test runner complains about missing `qrc:/` images, you must bundle the main application's resource file directly into the test executable:
 
-CMake
-
-```json
-    # Inside qt_add_test:
+```cmake
+    # Inside qt_add_executable:
     ${CMAKE_SOURCE_DIR}/src/resources.qrc
+```
+Then the `qt_add_executable()` block would be like this below mentioned snippet.
+
+```cmake
+qt_add_executable(tst_ui
+    TestSetup.cpp
+    utils/UiTestHelper.qml
+    pages/tst_WelcomeScreen.qml
+
+    # Adding the src/resources, so in unit tests the icons appear correctly.
+    ${CMAKE_SOURCE_DIR}/src/resources.qrc
+)
 ```
 
 ### The Sibling Import Rule
 
 To allow test files to resolve relative paths cleanly, the QML test engine is locked to the test directory using this macro:
 
-CMake
-
-```json
+```cmake
 target_compile_definitions(tst_ui PRIVATE
     QUICK_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )
@@ -107,7 +111,7 @@ target_compile_definitions(tst_ui PRIVATE
 If a new test is running in the console but not showing in the Autotest panel:
 
 1. Ensure the root element is exactly `TestCase {`.
-2. Ensure the file is listed in `qt_add_test`.
+2. Ensure the file is listed in `qt_add_executable`.
 3. Go to **Build > Clear CMake Configuration**.
 4. Right-click the project folder and **Run CMake**.
 5. Click **Rescan Tests** in the Autotest panel.
@@ -120,8 +124,6 @@ You may see the following warning at the very end of a test run on Windows:
 
 **Cause:** The QML test engine shuts down faster than the native Windows File Explorer background thread can terminate.
 **Fix:** This is harmless. However, to silence it, add a 50ms teardown delay to tests utilizing native dialogs:
-
-QML
 
 ```qml
 function cleanupTestCase() {
