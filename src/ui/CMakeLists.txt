@@ -17,11 +17,10 @@ qt_add_qml_module(UiLib
         # qml constants file
         UiConstants.qml
 
+
         # components
 
 
-        # icons
-        icons/minimize.png
 
         # pages
         pages/WelcomeScreen.qml
