@@ -6,22 +6,33 @@ import App.Backend 1.0
 Item {
     id: root
 
-    // --- 1. INTERNAL APP TOOLBAR ---
-    // Since Windows owns the very top title bar now, we add a small
-    // internal toolbar right below it to hold your hamburger menu.
+    // Top navbar for side menu and breadcrumbs.
     Rectangle {
         id: appToolbar
         width: parent.width
-        height: 50
-        color: "#F3F3F3" // We can bind this to your ThemeService later!
+        height: parent.height * 0.04
+        color: "#f2f2f2"
 
         RowLayout {
-            anchors.fill: parent
-            anchors.leftMargin: 10
+            // anchors.fill: parent
+            // anchors.leftMargin: 1
 
             Button {
-                text: "☰"
-                font.pixelSize: 20
+                id: menuButton
+                objectName: "menuButton"
+
+                icon.source: "qrc:/ui/icons/menu.png"
+                icon.width: appToolbar.width * 0.03
+                icon.height: appToolbar.height * 0.5
+                icon.color: "transparent"
+
+                // Custom transparent background
+                background: Rectangle {
+                    border.color: "transparent"
+                    color: "transparent"
+                }
+
+                // Action to perform on click.
                 onClicked: sideDrawer.open()
             }
 
@@ -29,7 +40,7 @@ Item {
         }
     }
 
-    // --- 2. MAIN CONTENT AREA ---
+    // Main content area.
     Item {
         id: contentArea
         anchors.top: appToolbar.bottom // Anchor below our internal toolbar
@@ -46,7 +57,7 @@ Item {
         }
     }
 
-    // --- 3. THE SIDE DRAWER (MENU) ---
+    // Side menu.
     Drawer {
         id: sideDrawer
         width: Math.max(250, parent.width * 0.2) // Ensures it doesn't get too thin
@@ -71,7 +82,16 @@ Item {
 
                 // Menu Items
                 Button {
-                    text: "📁 Files"
+                    text: "Files"
+                    // Point to your actual icon file in your resources
+                    icon.source: "qrc:/icons/folder.svg"
+                    icon.width: 24
+                    icon.height: 24
+                    icon.color: "transparent" // Use "transparent" to keep original SVG colors, or a hex color to tint it
+
+                    // This tells the button to show the text right next to the icon
+                    display: AbstractButton.TextBesideIcon
+
                     Layout.fillWidth: true
                     onClicked: {
                         console.log("Navigating to Files...")
@@ -80,7 +100,12 @@ Item {
                 }
 
                 Button {
-                    text: "⚙️ Settings"
+                    text: "Settings"
+                    icon.source: "qrc:/ui/icons/settings.png"
+                    icon.width: 10
+                    icon.height: 10
+                    display: AbstractButton.TextBesideIcon
+
                     Layout.fillWidth: true
                     onClicked: {
                         console.log("Navigating to Settings...")
@@ -89,7 +114,12 @@ Item {
                 }
 
                 Button {
-                    text: "🔄 Change Workspace"
+                    text: "Change Workspace"
+                    icon.source: "qrc:/icons/refresh.svg"
+                    icon.width: 24
+                    icon.height: 24
+                    display: AbstractButton.TextBesideIcon
+
                     Layout.fillWidth: true
                     onClicked: {
                         console.log("Resetting workspace...")
