@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import App.Backend 1.0
+import "../components"
 
 Item {
     id: root
@@ -67,60 +68,42 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: "#1E1E1E"
+            color: "white"
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 15
-                spacing: 15
+                anchors.margins: 5
+                spacing: 5
 
                 Text {
                     text: "Workspace Menu"
-                    color: "gray"
-                    font.bold: true
+                    color: "black"
+                    font.bold: false
                 }
 
-                // Menu Items
-                Button {
+                // --- Look how much cleaner this is! ---
+
+                MenuButton {
                     text: "Files"
-                    // Point to your actual icon file in your resources
                     icon.source: "qrc:/icons/folder.svg"
-                    icon.width: 24
-                    icon.height: 24
-                    icon.color: "transparent" // Use "transparent" to keep original SVG colors, or a hex color to tint it
-
-                    // This tells the button to show the text right next to the icon
-                    display: AbstractButton.TextBesideIcon
-
-                    Layout.fillWidth: true
                     onClicked: {
                         console.log("Navigating to Files...")
                         sideDrawer.close()
                     }
                 }
 
-                Button {
+                MenuButton {
                     text: "Settings"
                     icon.source: "qrc:/ui/icons/settings.png"
-                    icon.width: 10
-                    icon.height: 10
-                    display: AbstractButton.TextBesideIcon
-
-                    Layout.fillWidth: true
                     onClicked: {
                         console.log("Navigating to Settings...")
                         sideDrawer.close()
                     }
                 }
 
-                Button {
+                MenuButton {
                     text: "Change Workspace"
                     icon.source: "qrc:/icons/refresh.svg"
-                    icon.width: 24
-                    icon.height: 24
-                    display: AbstractButton.TextBesideIcon
-
-                    Layout.fillWidth: true
                     onClicked: {
                         console.log("Resetting workspace...")
                         sideDrawer.close()
