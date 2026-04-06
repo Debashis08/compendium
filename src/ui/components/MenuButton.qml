@@ -24,7 +24,7 @@ Button {
             anchors.left: parent.left
             anchors.leftMargin: 2 // Pushes the icon slightly off the left wall
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 5 // Space between the icon and the text
+            spacing: 8 // Space between the icon and the text
 
             // The exact PNG/SVG you pass in from the main file
             Image {
