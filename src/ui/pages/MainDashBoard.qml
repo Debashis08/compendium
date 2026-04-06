@@ -85,9 +85,9 @@ Item {
 
                 MenuButton {
                     text: "Files"
-                    icon.source: "qrc:/icons/folder.svg"
+                    icon.source: "qrc:/ui/icons/folder.png"
                     onClicked: {
-                        console.log("Navigating to Files...")
+                        console.log("Navigating to Files.")
                         sideDrawer.close()
                     }
                 }
@@ -96,16 +96,16 @@ Item {
                     text: "Settings"
                     icon.source: "qrc:/ui/icons/settings.png"
                     onClicked: {
-                        console.log("Navigating to Settings...")
+                        console.log("Navigating to Settings.")
                         sideDrawer.close()
                     }
                 }
 
                 MenuButton {
-                    text: "Change Workspace"
-                    icon.source: "qrc:/icons/refresh.svg"
+                    text: "Trash"
+                    icon.source: "qrc:/ui/icons/trash.png"
                     onClicked: {
-                        console.log("Resetting workspace...")
+                        console.log("Navigating to Trash.")
                         sideDrawer.close()
                     }
                 }
