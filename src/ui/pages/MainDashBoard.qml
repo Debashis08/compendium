@@ -75,11 +75,13 @@ Item {
                 anchors.margins: 5
                 spacing: 5
 
-                Text {
-                    text: "Workspace Menu"
-                    color: "black"
-                    font.bold: false
-                }
+                // Item { Layout.fillHeight: true } // Spacer
+
+                // Text {
+                //     text: "Workspace Menu"
+                //     color: "black"
+                //     font.bold: false
+                // }
 
                 // --- Look how much cleaner this is! ---
 
