@@ -4,5 +4,9 @@
         <file>ui/icons/google.png</file>
         <file>ui/icons/local-system.png</file>
         <file>ui/icons/compendium.png</file>
+        <file>ui/icons/settings.png</file>
+        <file>ui/icons/menu.png</file>
+        <file>ui/icons/folder.png</file>
+        <file>ui/icons/trash.png</file>
     </qresource>
 </RCC>

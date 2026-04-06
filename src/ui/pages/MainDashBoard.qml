@@ -2,26 +2,38 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import App.Backend 1.0
+import "../components"
 
 Item {
     id: root
 
-    // --- 1. INTERNAL APP TOOLBAR ---
-    // Since Windows owns the very top title bar now, we add a small
-    // internal toolbar right below it to hold your hamburger menu.
+    // Top navbar for side menu and breadcrumbs.
     Rectangle {
         id: appToolbar
         width: parent.width
-        height: 50
-        color: "#F3F3F3" // We can bind this to your ThemeService later!
+        height: parent.height * 0.04
+        color: "#f2f2f2"
 
         RowLayout {
-            anchors.fill: parent
-            anchors.leftMargin: 10
+            // anchors.fill: parent
+            // anchors.leftMargin: 1
 
             Button {
-                text: "☰"
-                font.pixelSize: 20
+                id: menuButton
+                objectName: "menuButton"
+
+                icon.source: "qrc:/ui/icons/menu.png"
+                icon.width: appToolbar.width * 0.03
+                icon.height: appToolbar.height * 0.5
+                icon.color: "transparent"
+
+                // Custom transparent background
+                background: Rectangle {
+                    border.color: "transparent"
+                    color: "transparent"
+                }
+
+                // Action to perform on click.
                 onClicked: sideDrawer.open()
             }
 
@@ -29,7 +41,7 @@ Item {
         }
     }
 
-    // --- 2. MAIN CONTENT AREA ---
+    // Main content area.
     Item {
         id: contentArea
         anchors.top: appToolbar.bottom // Anchor below our internal toolbar
@@ -46,7 +58,7 @@ Item {
         }
     }
 
-    // --- 3. THE SIDE DRAWER (MENU) ---
+    // Side menu.
     Drawer {
         id: sideDrawer
         width: Math.max(250, parent.width * 0.2) // Ensures it doesn't get too thin
@@ -56,43 +68,46 @@ Item {
 
         Rectangle {
             anchors.fill: parent
-            color: "#1E1E1E"
+            color: "white"
 
             ColumnLayout {
                 anchors.fill: parent
-                anchors.margins: 15
-                spacing: 15
+                anchors.margins: 5
+                spacing: 5
 
-                Text {
-                    text: "Workspace Menu"
-                    color: "gray"
-                    font.bold: true
-                }
+                // Item { Layout.fillHeight: true } // Spacer
 
-                // Menu Items
-                Button {
-                    text: "📁 Files"
-                    Layout.fillWidth: true
+                // Text {
+                //     text: "Workspace Menu"
+                //     color: "black"
+                //     font.bold: false
+                // }
+
+                // --- Look how much cleaner this is! ---
+
+                MenuButton {
+                    text: "Files"
+                    icon.source: "qrc:/ui/icons/folder.png"
                     onClicked: {
-                        console.log("Navigating to Files...")
+                        console.log("Navigating to Files.")
                         sideDrawer.close()
                     }
                 }
 
-                Button {
-                    text: "⚙️ Settings"
-                    Layout.fillWidth: true
+                MenuButton {
+                    text: "Settings"
+                    icon.source: "qrc:/ui/icons/settings.png"
                     onClicked: {
-                        console.log("Navigating to Settings...")
+                        console.log("Navigating to Settings.")
                         sideDrawer.close()
                     }
                 }
 
-                Button {
-                    text: "🔄 Change Workspace"
-                    Layout.fillWidth: true
+                MenuButton {
+                    text: "Trash"
+                    icon.source: "qrc:/ui/icons/trash.png"
                     onClicked: {
-                        console.log("Resetting workspace...")
+                        console.log("Navigating to Trash.")
                         sideDrawer.close()
                     }
                 }
