@@ -7,57 +7,25 @@ import "../components"
 Item {
     id: root
 
-    // Top navbar for side menu and breadcrumbs.
-    Rectangle {
-        id: appToolbar
+    // Instantiate the Toolbar
+    AppToolbar {
+        id: topToolbar
         width: parent.width
         height: parent.height * 0.04
-        color: "#f2f2f2"
 
-        RowLayout {
-            // anchors.fill: parent
-            // anchors.leftMargin: 1
-
-            Button {
-                id: menuButton
-                objectName: "menuButton"
-
-                icon.source: "qrc:/ui/icons/menu.png"
-                icon.width: appToolbar.width * 0.03
-                icon.height: appToolbar.height * 0.5
-                icon.color: "transparent"
-
-                // Custom transparent background
-                background: Rectangle {
-                    border.color: "transparent"
-                    color: "transparent"
-                }
-
-                // Action to perform on click.
-                onClicked: {
-                    if(sideDrawer.opened)
-                    {
-                        sideDrawer.close()
-                    }
-                    else
-                    {
-                        sideDrawer.open()
-                    }
-                }
-            }
-
-            Item { Layout.fillWidth: true } // Pushes the button to the left
-        }
+        // Listen to the signal and toggle the drawer
+        onMenuClicked: sideDrawer.opened ? sideDrawer.close() : sideDrawer.open()
     }
 
-    // Main content area.
+    // Instantiate the Content Area
     Item {
         id: contentArea
-        anchors.top: appToolbar.bottom
+        anchors.top: topToolbar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        // Push content based on drawer position
         anchors.leftMargin: sideDrawer.position * sideDrawer.width
 
         Text {
@@ -69,65 +37,11 @@ Item {
         }
     }
 
-    // Side menu.
-    Drawer {
+    // Instantiate the Drawer
+    SideDrawer {
         id: sideDrawer
-        y: appToolbar.height
-        width: Math.max(250, parent.width * 0.2) // Ensures it doesn't get too thin
+        y: topToolbar.height
+        width: Math.max(250, parent.width * 0.2)
         height: contentArea.height
-        edge: Qt.LeftEdge
-        modal: false
-        dim: false
-        closePolicy: Popup.NoAutoClose
-
-        Rectangle {
-            anchors.fill: parent
-            color: "#f2f2f2"
-
-            ColumnLayout {
-                anchors.fill: parent
-                anchors.margins: 5
-                spacing: 5
-
-                // Item { Layout.fillHeight: true } // Spacer
-
-                // Text {
-                //     text: "Workspace Menu"
-                //     color: "black"
-                //     font.bold: false
-                // }
-
-                // --- Look how much cleaner this is! ---
-
-                MenuButton {
-                    text: "Files"
-                    icon.source: "qrc:/ui/icons/folder.png"
-                    onClicked: {
-                        console.log("Navigating to Files.")
-                        sideDrawer.close()
-                    }
-                }
-
-                MenuButton {
-                    text: "Settings"
-                    icon.source: "qrc:/ui/icons/settings.png"
-                    onClicked: {
-                        console.log("Navigating to Settings.")
-                        sideDrawer.close()
-                    }
-                }
-
-                MenuButton {
-                    text: "Trash"
-                    icon.source: "qrc:/ui/icons/trash.png"
-                    onClicked: {
-                        console.log("Navigating to Trash.")
-                        sideDrawer.close()
-                    }
-                }
-
-                Item { Layout.fillHeight: true } // Spacer
-            }
-        }
     }
 }
