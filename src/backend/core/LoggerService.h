@@ -11,6 +11,7 @@ class LoggerService
 public:
     // Call this once in main.cpp
     static void initialize();
+    static void cleanup();
 
 private:
     // The actual handler that Qt calls
