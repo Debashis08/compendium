@@ -108,3 +108,21 @@ void LoggerService::messageHandler(QtMsgType type, const QMessageLogContext &con
     // Also write to standard Console
     std::cout << formattedMsg.toStdString() << std::endl;
 }
+
+void LoggerService::cleanup()
+{
+    if (_logFile && _logFile->isOpen())
+    {
+        // Write the session end separator
+        QTextStream out(_logFile);
+        out << "--------------------------------------------------------------------\n";
+        out << "session end: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << "\n";
+        out << "--------------------------------------------------------------------\n";
+        _logFile->flush();
+
+        // Safely close and delete the file pointer
+        _logFile->close();
+        delete _logFile;
+        _logFile = nullptr;
+    }
+}
