@@ -34,7 +34,16 @@ Item {
                 }
 
                 // Action to perform on click.
-                onClicked: sideDrawer.open()
+                onClicked: {
+                    if(sideDrawer.opened)
+                    {
+                        sideDrawer.close()
+                    }
+                    else
+                    {
+                        sideDrawer.open()
+                    }
+                }
             }
 
             Item { Layout.fillWidth: true } // Pushes the button to the left
@@ -44,10 +53,12 @@ Item {
     // Main content area.
     Item {
         id: contentArea
-        anchors.top: appToolbar.bottom // Anchor below our internal toolbar
+        anchors.top: appToolbar.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+
+        anchors.leftMargin: sideDrawer.position * sideDrawer.width
 
         Text {
             anchors.centerIn: parent
@@ -61,14 +72,17 @@ Item {
     // Side menu.
     Drawer {
         id: sideDrawer
+        y: appToolbar.height
         width: Math.max(250, parent.width * 0.2) // Ensures it doesn't get too thin
-        height: parent.height
-
+        height: contentArea.height
         edge: Qt.LeftEdge
+        modal: false
+        dim: false
+        closePolicy: Popup.NoAutoClose
 
         Rectangle {
             anchors.fill: parent
-            color: "white"
+            color: "#f2f2f2"
 
             ColumnLayout {
                 anchors.fill: parent
