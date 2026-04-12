@@ -1,8 +1,10 @@
 template: |
-  ### Changes and updates in release v$RESOLVED_VERSION
+  ### Compendium — release v$RESOLVED_VERSION
   $CHANGES
-  
+
   **Full Changelog:** https://github.com/$OWNER/$REPOSITORY/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+
+change-template: '- $TITLE [#$NUMBER]'
 
 categories:
   - title: 'User Interface changes'
