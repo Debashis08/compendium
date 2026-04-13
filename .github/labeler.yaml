@@ -6,16 +6,23 @@ ui:
       - any-glob-to-any-file: '*.qrc'
       - any-glob-to-any-file: '*.conf'
 
-# Backend changes (excludes core)
+# Backend changes — any-glob fires it, all-globs block it if core files are present
 backend:
-  - changed-files:
-      - any-glob-to-any-file: 'src/backend/**'
-      - any-glob-to-any-file: 'tests/backend/**'
+  - all:
+    - changed-files:
+        - any-glob-to-any-file:
+            - 'src/backend/**'
+            - 'tests/backend/**'
+    - changed-files:
+        - all-globs-to-all-files:
+            - '!src/backend/core/**'
+            - '!tests/backend/core/**'
 
 # Core Infrastructure changes
 core:
   - changed-files:
       - any-glob-to-any-file: 'src/backend/core/**'
+      - any-glob-to-any-file: 'tests/backend/core/**'
 
 # Installer changes
 installer:
