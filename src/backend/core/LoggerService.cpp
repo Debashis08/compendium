@@ -35,7 +35,7 @@ void LoggerService::initialize()
         // Since we are appending, we need a visual line to see where this run started.
         QTextStream out(_logFile);
         out << "--------------------------------------------------------------------\n";
-        out << "session start: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss") << "\n";
+        out << "session start: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << "\n";
         out << "--------------------------------------------------------------------\n";
         _logFile->flush();
 
@@ -96,7 +96,7 @@ void LoggerService::messageHandler(QtMsgType type, const QMessageLogContext &con
 
     // Format the message
     // Format: [YYYY-MM-DD HH:mm:ss] [LEVEL] Message
-    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss");
+    QString timestamp = QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz");
     QString formattedMsg = QString("[%1] [%2] %3").arg(timestamp, levelText, msg);
 
     // Write to File
@@ -107,4 +107,22 @@ void LoggerService::messageHandler(QtMsgType type, const QMessageLogContext &con
 
     // Also write to standard Console
     std::cout << formattedMsg.toStdString() << std::endl;
+}
+
+void LoggerService::cleanup()
+{
+    if (_logFile && _logFile->isOpen())
+    {
+        // Write the session end separator
+        QTextStream out(_logFile);
+        out << "--------------------------------------------------------------------\n";
+        out << "session end: " << QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss.zzz") << "\n";
+        out << "--------------------------------------------------------------------\n";
+        _logFile->flush();
+
+        // Safely close and delete the file pointer
+        _logFile->close();
+        delete _logFile;
+        _logFile = nullptr;
+    }
 }
