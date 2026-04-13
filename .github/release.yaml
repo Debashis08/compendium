@@ -28,11 +28,6 @@ categories:
   - title: 'Build System updates'
     labels:
       - 'build-system'
-    # Hide build changes if they are part of a feature PR
-    exclude-labels:
-      - 'ui'
-      - 'backend'
-      - 'core'
     
   - title: 'Workflow and Tooling changes'
     labels:
