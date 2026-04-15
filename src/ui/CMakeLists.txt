@@ -19,8 +19,12 @@ qt_add_qml_module(UiLib
 
 
         # components
+        components/MenuButton.qml
+        components/AppToolbar.qml
+        components/SideDrawer.qml
 
-
+        # icons
+        # icon files not needed to be included in cmake.
 
         # pages
         pages/WelcomeScreen.qml
