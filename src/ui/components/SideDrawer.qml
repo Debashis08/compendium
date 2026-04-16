@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import App.Ui 1.0
+import App.Backend 1.0
 
 Drawer {
     id: root
@@ -9,6 +11,7 @@ Drawer {
     modal: false
     dim: false
     closePolicy: Popup.NoAutoClose
+    property var backendController: ServiceProvider.appController
 
     Rectangle {
         anchors.fill: parent
@@ -20,11 +23,20 @@ Drawer {
             spacing: 5
 
             MenuButton {
+                text: backendController.workspaceName
+                // icon.source: "qrc:/ui/icons/folder.png"
+                onClicked: {
+                    console.log("Navigating to workspace.")
+                    // root.close()
+                }
+            }
+
+            MenuButton {
                 text: "Files"
                 icon.source: "qrc:/ui/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to Files.")
-                    root.close()
+                    // root.close()
                 }
             }
 
@@ -33,7 +45,7 @@ Drawer {
                 icon.source: "qrc:/ui/icons/settings.png"
                 onClicked: {
                     console.log("Navigating to Settings.")
-                    root.close()
+                    // root.close()
                 }
             }
 
@@ -42,7 +54,7 @@ Drawer {
                 icon.source: "qrc:/ui/icons/trash.png"
                 onClicked: {
                     console.log("Navigating to Trash.")
-                    sideDrawer.close()
+                    // sideDrawer.close()
                 }
             }
 
