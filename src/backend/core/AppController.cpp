@@ -6,7 +6,18 @@ AppController::AppController(QObject *parent) : QObject(parent)
     // Load workspace path if already set in settings
     this->_workspacePath = this->_settings.value(AppConstants::Storage::SettingsKeyWorkspace, "").toString();
 
-    // Set up the stateMachine and the states
+    // Calculate the workspace name at startup if a path exists.
+    if(!this->_workspacePath.isEmpty())
+    {
+        QStringList modifiedPathSplit = this->_workspacePath.split("/");
+        this->_workspaceName = modifiedPathSplit.last();
+    }
+    else
+    {
+        this->_workspaceName = "No Workspace";
+    }
+
+    // Set up the stateMachine and the states.
     this->setupStateMachine();
 }
 
@@ -18,6 +29,11 @@ QString AppController::currentState() const
 QString AppController::workspacePath() const
 {
     return this->_workspacePath;
+}
+
+QString AppController::workspaceName() const
+{
+    return this->_workspaceName;
 }
 
 void AppController::setupStateMachine()
@@ -97,7 +113,11 @@ void AppController::setWorkspacePath(const QString& path)
 #endif
 
     this->_workspacePath = modifiedPath;
+    QStringList modifiedPathSplit = modifiedPath.split("/");
+    this->_workspaceName = modifiedPathSplit[modifiedPathSplit.size()-1];
     this->_settings.setValue(AppConstants::Storage::SettingsKeyWorkspace, this->_workspacePath);
 
+    emit this->workspacePathChanged();
+    emit this->workspaceNameChanged();
     emit this->workspaceConfigured();
 }
