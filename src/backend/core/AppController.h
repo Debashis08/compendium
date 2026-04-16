@@ -14,12 +14,14 @@ class AppController : public QObject
     Q_OBJECT
     Q_PROPERTY(QString currentState READ currentState NOTIFY currentStateChanged)
     Q_PROPERTY(QString workspacePath READ workspacePath NOTIFY workspacePathChanged)
+    Q_PROPERTY(QString workspaceName READ workspaceName NOTIFY workspaceNameChanged)
 
 public:
     explicit AppController(QObject *parent = nullptr);
 
     QString currentState() const;
     QString workspacePath() const;
+    QString workspaceName()const;
 
 public slots:
     // This slot is called by QML when user selects a folder in the Welcome Screen
@@ -34,6 +36,7 @@ signals:
     // QML notification signals
     void currentStateChanged();
     void workspacePathChanged();
+    void workspaceNameChanged();
 
 private:
     void setupStateMachine();
@@ -42,6 +45,7 @@ private:
 
     QStateMachine* _machine;
     QString _currentState;
+    QString _workspaceName;
     QString _workspacePath;
     QSettings _settings;
 };
