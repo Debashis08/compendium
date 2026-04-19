@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>compendium-qtquickcontrols2.conf</file>
+        <file>Main.qml</file>
+        <file>assets/icons/google.png</file>
+        <file>assets/icons/local-system.png</file>
+        <file>assets/icons/compendium.png</file>
+        <file>assets/icons/settings.png</file>
+        <file>assets/icons/menu.png</file>
+        <file>assets/icons/folder.png</file>
+        <file>assets/icons/trash.png</file>
+    </qresource>
+</RCC>

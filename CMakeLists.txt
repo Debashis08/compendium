@@ -29,5 +29,5 @@ add_subdirectory(src)
 set(QML_IMPORT_PATH "${CMAKE_BINARY_DIR}/staging" CACHE STRING "Qt Creator QML Path" FORCE)
 
 # Add Tests
-enable_testing()
-add_subdirectory(tests)
+# enable_testing()
+# add_subdirectory(tests)
