@@ -11,7 +11,7 @@ Drawer {
     modal: false
     dim: false
     closePolicy: Popup.NoAutoClose
-    property var backendController: ServiceProvider.appController
+    // property var backendController: ServiceProvider.appController
 
     Rectangle {
         anchors.fill: parent
@@ -23,8 +23,8 @@ Drawer {
             spacing: 5
 
             MenuButton {
-                text: backendController.workspaceName
-                // icon.source: "qrc:/ui/icons/folder.png"
+                text: WorkspaceViewModel.workspaceName
+                // icon.source: "qrc:/assets/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to workspace.")
                     // root.close()
@@ -33,7 +33,7 @@ Drawer {
 
             MenuButton {
                 text: "Files"
-                icon.source: "qrc:/ui/icons/folder.png"
+                icon.source: "qrc:/assets/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to Files.")
                     // root.close()
@@ -42,7 +42,7 @@ Drawer {
 
             MenuButton {
                 text: "Settings"
-                icon.source: "qrc:/ui/icons/settings.png"
+                icon.source: "qrc:/assets/icons/settings.png"
                 onClicked: {
                     console.log("Navigating to Settings.")
                     // root.close()
@@ -51,7 +51,7 @@ Drawer {
 
             MenuButton {
                 text: "Trash"
-                icon.source: "qrc:/ui/icons/trash.png"
+                icon.source: "qrc:/assets/icons/trash.png"
                 onClicked: {
                     console.log("Navigating to Trash.")
                     // sideDrawer.close()

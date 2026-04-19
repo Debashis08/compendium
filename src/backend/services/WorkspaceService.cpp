@@ -1,5 +1,5 @@
 #include "WorkspaceService.h"
-#include "./bridge/AppConstants.h" // Assumes AppConstants::Storage::SettingsKeyWorkspace is defined here
+#include "../../core/AppConstants.h"
 #include <QStringList>
 
 WorkspaceService::WorkspaceService() 
@@ -11,11 +11,11 @@ WorkspaceService::WorkspaceService()
     if(!_workspacePath.isEmpty())
     {
         QStringList modifiedPathSplit = _workspacePath.split("/");
-        _workspaceName = modifiedPathSplit.last(); [cite: 129]
+        _workspaceName = modifiedPathSplit.last();
     }
     else
     {
-        _workspaceName = "No Workspace"; [cite: 130]
+        _workspaceName = "No Workspace";
     }
 }
 
@@ -36,13 +36,13 @@ void WorkspaceService::setWorkspacePath(const QString& path)
     // Sanitize the file path if it comes from a QML FileDialog
     if(modifiedPath.startsWith("file://"))
     {
-        modifiedPath.remove(0, 7); [cite: 146]
+        modifiedPath.remove(0, 7);
     }
 
 #ifdef Q_OS_WIN
     if(modifiedPath.startsWith("/"))
     {
-        modifiedPath.remove(0, 1); [cite: 147]
+        modifiedPath.remove(0, 1);
     }
 #endif
 
@@ -52,12 +52,12 @@ void WorkspaceService::setWorkspacePath(const QString& path)
     QStringList modifiedPathSplit = modifiedPath.split("/");
     _workspaceName = modifiedPathSplit.last();
     
-    // Persist the new workspace path to QSettings [cite: 148]
+    // Persist the new workspace path to QSettings
     _settings.setValue(AppConstants::Storage::SettingsKeyWorkspace, _workspacePath);
 }
 
 bool WorkspaceService::hasValidWorkspace() const 
 {
     // Validate that the string is not empty and the directory actually exists on disk
-    return (!_workspacePath.isEmpty() && QDir(_workspacePath).exists()); [cite: 141]
+    return (!_workspacePath.isEmpty() && QDir(_workspacePath).exists());
 }

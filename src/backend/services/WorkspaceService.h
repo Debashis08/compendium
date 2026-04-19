@@ -1,7 +1,7 @@
 #ifndef WORKSPACESERVICE_H
 #define WORKSPACESERVICE_H
 
-#include "./core/interfaces/IWorkspaceService.h"
+#include "../../core/ServiceProvider.h"
 #include <QSettings>
 #include <QDir>
 

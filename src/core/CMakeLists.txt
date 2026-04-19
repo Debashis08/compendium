@@ -3,6 +3,7 @@
 # Define the Core library as a static library
 add_library(CoreLib STATIC
     AppConstants.h
+    ServiceProvider.h
     interfaces/IWorkspaceService.h
 )
 

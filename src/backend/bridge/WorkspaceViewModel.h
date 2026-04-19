@@ -2,9 +2,11 @@
 #define WORKSPACEVIEWMODEL_H
 
 #include <QObject>
+#include <QQmlEngine>
+#include <QJSEngine>
 #include <QtQml/qqmlregistration.h>
-#include "../core/IWorkspaceService.h"
-#include "../core/ServiceProvider.h"
+#include "../../core/interfaces/IWorkspaceService.h"
+#include "../../core/ServiceProvider.h"
 
 class WorkspaceViewModel : public QObject {
     Q_OBJECT

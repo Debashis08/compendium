@@ -1,7 +1,9 @@
 #include <QIcon>
 #include <QGuiApplication>
+#include <QSettings>
+#include <QQmlContext>
 #include <QQmlApplicationEngine>
-#include "core/ServiceInitializer.h"
+#include "ServiceInitializer.h"
 
 int main(int argc, char *argv[])
 {
@@ -25,6 +27,7 @@ int main(int argc, char *argv[])
     initializer.initialize();
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("appOrchestrator", initializer.getAppController());
 
     engine.addImportPath(":/qt/qml");
     engine.loadFromModule("App.Ui", "Main");

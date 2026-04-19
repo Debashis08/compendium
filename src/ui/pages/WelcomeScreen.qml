@@ -90,7 +90,7 @@ Item {
                         id: localSystemIcon
                         // Replace this with the actual path to your icon
                         // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
-                        source: "qrc:/ui/icons/local-system.png"
+                        source: "qrc:/assets/icons/local-system.png"
 
                         width: parent.width * 0.14  // Set desired icon width
                         height: parent.width * 0.14  // Set desired icon height
@@ -146,7 +146,7 @@ Item {
                         id: googleIcon
                         // Replace this with the actual path to your icon
                         // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
-                        source: "qrc:/ui/icons/google.png"
+                        source: "qrc:/assets/icons/google.png"
 
                         width: parent.width * 0.14  // Set desired icon width
                         height: parent.width * 0.14  // Set desired icon height

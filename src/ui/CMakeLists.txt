@@ -1,5 +1,8 @@
 # src/ui/CMakeLists.txt
 
+# Tell CMake that UiConstants is a globally accessible Singleton
+set_source_files_properties(UiConstants.qml PROPERTIES QT_QML_SINGLETON_TYPE TRUE)
+
 qt_add_qml_module(UiLib
     STATIC
     URI "App.Ui"

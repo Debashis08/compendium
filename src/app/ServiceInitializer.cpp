@@ -1,8 +1,8 @@
 #include <QCoreApplication>
 #include "ServiceInitializer.h"
-#include "ServiceProvider.h"
+#include "../core/ServiceProvider.h"
 #include "LoggerService.h"
-#include "WorkspaceService.h" // Include concrete service
+#include "../backend/services/WorkspaceService.h"
 
 void ServiceInitializer::initialize()
 {
@@ -21,5 +21,5 @@ void ServiceInitializer::initialize()
 
     // 3. Inject Services into the AppController
     _appController = std::make_unique<AppController>(_workspaceService.get());
-    serviceProvider.setAppController(_appController.get());
+    // serviceProvider.setAppController(_appController.get());
 }

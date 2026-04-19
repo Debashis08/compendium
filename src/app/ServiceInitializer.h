@@ -1,13 +1,21 @@
-#pragma once
-#include <memory>
-#include "AppController.h"
+#ifndef SERVICEINITIALIZER_H
+#define SERVICEINITIALIZER_H
 
-// The new name for AppBootstrapper
+#include <memory>
+#include "../core/interfaces/IWorkspaceService.h"
+#include "../backend/bridge/AppController.h"
+
 class ServiceInitializer
 {
 public:
     void initialize();
 
+    // Add this getter!
+    AppController* getAppController() const { return _appController.get(); }
+
 private:
+    std::unique_ptr<IWorkspaceService> _workspaceService;
     std::unique_ptr<AppController> _appController;
 };
+
+#endif // SERVICEINITIALIZER_H
