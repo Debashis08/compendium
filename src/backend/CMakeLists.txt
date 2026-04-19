@@ -1,8 +1,7 @@
-cmake_minimum_required(VERSION 3.16)
+# src/backend/CMakeLists.txt
 
-# Load Secrets & Environment Variables
+# Load Secrets & Environment Variables (Optional)
 include("${CMAKE_SOURCE_DIR}/Secrets.local.cmake" OPTIONAL)
-
 set(GOOGLE_CLIENT_ID "$ENV{GOOGLE_CLIENT_ID}")
 set(GOOGLE_CLIENT_SECRET "$ENV{GOOGLE_CLIENT_SECRET}")
 
@@ -10,37 +9,19 @@ if(NOT GOOGLE_CLIENT_ID OR NOT GOOGLE_CLIENT_SECRET)
     message(WARNING "BackendLib: Google OAuth keys are missing. Auth will not work.")
 endif()
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Qml StateMachine)
-
 # Define Source Files
 set(BACKEND_SOURCES
-
-    # interface
-
-    
-    # core
-    core/AppConstants.h
-    core/LoggerService.h
-    core/LoggerService.cpp
-    core/ServiceProvider.h         
-    core/ServiceProvider.cpp       
-    core/ServiceInitializer.h     
-    core/ServiceInitializer.cpp
-    core/AppController.h
-    core/AppController.cpp
-    
-    # services
-
-
-
-    # viewmodels
-
-
-
-
+    bridge/AppController.h
+    bridge/AppController.cpp
+    bridge/WorkspaceViewModel.h
+    bridge/WorkspaceViewModel.cpp
+    services/LoggerService.h
+    services/LoggerService.cpp
+    services/WorkspaceService.h
+    services/WorkspaceService.cpp
 )
 
-# Create QML Module
+# Create QML Module for the Backend
 qt_add_qml_module(BackendLib
     STATIC
     URI "App.Backend"
@@ -54,17 +35,17 @@ target_compile_definitions(BackendLib PRIVATE
     CLIENT_SECRET="${GOOGLE_CLIENT_SECRET}"
 )
 
-# Include directories
+# Make headers available to the App orchestrator
 target_include_directories(BackendLib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/interfaces
-    ${CMAKE_CURRENT_SOURCE_DIR}/core
+    ${CMAKE_CURRENT_SOURCE_DIR}/bridge
     ${CMAKE_CURRENT_SOURCE_DIR}/services
-    ${CMAKE_CURRENT_SOURCE_DIR}/viewmodels
 )
 
+# Link against CoreLib and necessary Qt modules
 target_link_libraries(BackendLib 
-    PRIVATE
+    PUBLIC 
+    CoreLib
     Qt6::Quick
     Qt6::Qml
     Qt6::StateMachine

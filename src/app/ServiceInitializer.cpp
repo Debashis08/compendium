@@ -2,23 +2,24 @@
 #include "ServiceInitializer.h"
 #include "ServiceProvider.h"
 #include "LoggerService.h"
+#include "WorkspaceService.h" // Include concrete service
 
 void ServiceInitializer::initialize()
 {
     LoggerService::initialize();
 
-    // Register teardown hooks for graceful shutdown
-    // qApp is a global pointer to the current application instance
     QObject::connect(qApp, &QCoreApplication::aboutToQuit, []() {
         LoggerService::cleanup();
     });
 
-    // AppController creation
-    _appController = std::make_unique<AppController>();
+    // 1. Instantiate Concrete Services
+    _workspaceService = std::make_unique<WorkspaceService>();
     
-    // Inject into the new ServiceProvider
+    // 2. Register with Service Provider as Interfaces
     auto& serviceProvider = ServiceProvider::instance();
+    serviceProvider.setWorkspaceService(_workspaceService.get());
 
-    // serviceProvider.setCounterService(_counterService.get());
+    // 3. Inject Services into the AppController
+    _appController = std::make_unique<AppController>(_workspaceService.get());
     serviceProvider.setAppController(_appController.get());
 }

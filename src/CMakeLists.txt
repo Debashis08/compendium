@@ -1,29 +1,12 @@
-qt_add_executable(compendium
-    main.cpp
-    resources.qrc
-)
+# src/CMakeLists.txt
 
-# This embeds the file at the root path ":/" which is where Qt looks for it.
-qt_add_resources(compendium "configuration"
-    PREFIX "/"
-    FILES "compendium-qtquickcontrols2.conf"
-)
+cmake_minimum_required(VERSION 3.16)
 
-# This below config setting is to avoid openning a command prompt window while running the app in windows machine.
-set_target_properties(compendium PROPERTIES WIN32_EXECUTABLE ON)
+# Find Qt modules globally for the source tree
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Quick Qml StateMachine)
 
+# Enforce build order: Core -> Backend/UI -> App
+add_subdirectory(core)
 add_subdirectory(backend)
 add_subdirectory(ui)
-
-target_link_libraries(compendium
-    PRIVATE
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::StateMachine
-    BackendLib
-    # critical
-    BackendLibplugin
-    UiLib
-    #critical
-    UiLibplugin
-)
+add_subdirectory(app)
