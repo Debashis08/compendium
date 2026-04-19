@@ -1,7 +1,7 @@
 #include <QCoreApplication>
 #include "ServiceInitializer.h"
 #include "../core/ServiceProvider.h"
-#include "LoggerService.h"
+#include "../backend/services/LoggerService.h"
 #include "../backend/services/WorkspaceService.h"
 
 void ServiceInitializer::initialize()

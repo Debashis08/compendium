@@ -6,7 +6,6 @@
 #include <QJSEngine>
 #include <QtQml/qqmlregistration.h>
 #include "../../core/interfaces/IWorkspaceService.h"
-#include "../../core/ServiceProvider.h"
 
 class WorkspaceViewModel : public QObject {
     Q_OBJECT
@@ -18,24 +17,16 @@ class WorkspaceViewModel : public QObject {
 
 public:
     // Factory for QML Singleton
-    static WorkspaceViewModel* create(QQmlEngine*, QJSEngine*) {
-        return new WorkspaceViewModel(ServiceProvider::instance().workspaceService());
-    }
+    static WorkspaceViewModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
 
     // Constructor Injection
-    explicit WorkspaceViewModel(IWorkspaceService* workspaceService, QObject *parent = nullptr) 
-        : QObject(parent), _workspaceService(workspaceService) {}
+    explicit WorkspaceViewModel(IWorkspaceService* workspaceService, QObject *parent = nullptr);
 
-    QString workspacePath() const { return _workspaceService ? _workspaceService->getWorkspacePath() : ""; }
-    QString workspaceName() const { return _workspaceService ? _workspaceService->getWorkspaceName() : ""; }
+    QString workspacePath() const;
+    QString workspaceName() const;
 
 public slots:
-    void setWorkspacePath(const QString& path) {
-        if (_workspaceService) {
-            _workspaceService->setWorkspacePath(path);
-            emit workspaceChanged();
-        }
-    }
+    void setWorkspacePath(const QString& path);
 
 signals:
     void workspaceChanged();
