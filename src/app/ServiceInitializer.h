@@ -3,7 +3,7 @@
 
 #include <memory>
 #include "../core/interfaces/IWorkspaceService.h"
-#include "../backend/bridge/AppController.h"
+#include "../backend/bridges/AppController.h"
 
 class ServiceInitializer
 {

@@ -11,10 +11,10 @@ endif()
 
 # Define Source Files
 set(BACKEND_SOURCES
-    bridge/AppController.h
-    bridge/AppController.cpp
-    bridge/WorkspaceViewModel.h
-    bridge/WorkspaceViewModel.cpp
+    bridges/AppController.h
+    bridges/AppController.cpp
+    bridges/WorkspaceViewModel.h
+    bridges/WorkspaceViewModel.cpp
     services/LoggerService.h
     services/LoggerService.cpp
     services/WorkspaceService.h
@@ -38,7 +38,7 @@ target_compile_definitions(BackendLib PRIVATE
 # Make headers available to the App orchestrator
 target_include_directories(BackendLib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/bridge
+    ${CMAKE_CURRENT_SOURCE_DIR}/bridges
     ${CMAKE_CURRENT_SOURCE_DIR}/services
 )
 
