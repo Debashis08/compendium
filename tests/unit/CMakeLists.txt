@@ -2,14 +2,14 @@
 
 find_package(Qt6 REQUIRED COMPONENTS Test)
 
-# 1. Automatically Download and Build Google Test & Google Mock
+# Automatically Download and Build Google Test and Google Mock.
 include(FetchContent)
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
 )
 
-# For Windows: Prevent GTest from overriding MSVC runtime library settings
+# For Windows: Prevent GTest from overriding MSVC runtime library settings.
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
