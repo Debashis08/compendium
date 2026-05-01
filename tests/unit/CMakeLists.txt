@@ -23,7 +23,8 @@ add_executable(UnitTests
     
     # backend layer
     backend/bridges/tst_AppController.cpp
-    # Add other test files here as you create them
+
+    ${CMAKE_SOURCE_DIR}/src/app/ServiceInitializer.cpp
 )
 
 # Allow tests to see the src headers and our mocks folder

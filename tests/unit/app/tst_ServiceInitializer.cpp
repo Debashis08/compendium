@@ -1,26 +1,41 @@
-// #include <QtTest>
-// #include "../../src/app/ServiceInitializer.h"
-// #include "../../src/core/ServiceProvider.h"
+#include <gtest/gtest.h>
+#include <QCoreApplication> // Required because initialize() uses qApp
 
-// class TestServiceInitializer : public QObject
-// {
-//     Q_OBJECT
+// Include the class we are testing
+#include "../../src/app/ServiceInitializer.h"
 
-// private slots:
-//     void test_bootstrapping()
-//     {
-//         // Ensure Registry is initially empty (or reset it)
-//         ServiceProvider::instance().setAppController(nullptr);
-//         QVERIFY(ServiceProvider::instance().appController() == nullptr);
+// Include the Service Locator to verify registration
+#include "../../src/core/ServiceProvider.h"
 
-//         // Run the Initializer
-//         ServiceInitializer init;
-//         init.initialize();
+class ServiceInitializerTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Ensure the global Service Locator is completely empty before we begin
+        ServiceProvider::instance().setWorkspaceService(nullptr);
+    }
 
-//         // Verify the Registry is now populated
-//         QVERIFY(ServiceProvider::instance().appController() != nullptr);
-//     }
-// };
+    void TearDown() override {
+        // Clean up the global state so this test doesn't pollute other tests
+        ServiceProvider::instance().setWorkspaceService(nullptr);
+    }
+};
 
-// QTEST_MAIN(TestServiceInitializer)
-// #include "tst_ServiceInitializer.moc"
+// --- Actual Unit Tests ---
+
+TEST_F(ServiceInitializerTest, SuccessfullyWiresDependenciesOnInitialization) {
+    // Arrange: Create the initializer
+    ServiceInitializer initializer;
+
+    // Verify pre-conditions (everything should be null)
+    EXPECT_EQ(initializer.getAppController(), nullptr);
+    EXPECT_EQ(ServiceProvider::instance().workspaceService(), nullptr);
+
+    // Act: Run the initialization sequence
+    initializer.initialize();
+
+    // Assert 1: The AppController was successfully created
+    EXPECT_NE(initializer.getAppController(), nullptr);
+
+    // Assert 2: The WorkspaceService was created AND registered in the ServiceProvider
+    EXPECT_NE(ServiceProvider::instance().workspaceService(), nullptr);
+}
