@@ -6,20 +6,23 @@
 
 void ServiceInitializer::initialize()
 {
+    // Instantiate logger service.
     LoggerService::initialize();
 
+    // Connect the signal-slot for logger service cleanup method with qApp, to log the sessions end.
     QObject::connect(qApp, &QCoreApplication::aboutToQuit, []() {
         LoggerService::cleanup();
     });
 
-    // 1. Instantiate Concrete Services
+    // Instantiate Concrete Services.
+    // Instantiate workspace service.
     _workspaceService = std::make_unique<WorkspaceService>();
     
-    // 2. Register with Service Provider as Interfaces
+    // Register with Service Provider as Interfaces.
     auto& serviceProvider = ServiceProvider::instance();
     serviceProvider.setWorkspaceService(_workspaceService.get());
 
-    // 3. Inject Services into the AppController
+    // Inject Services into the AppController
     _appController = std::make_unique<AppController>(_workspaceService.get());
     // serviceProvider.setAppController(_appController.get());
 }

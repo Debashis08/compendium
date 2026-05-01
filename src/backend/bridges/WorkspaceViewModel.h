@@ -7,7 +7,8 @@
 #include <QtQml/qqmlregistration.h>
 #include "../../core/interfaces/IWorkspaceService.h"
 
-class WorkspaceViewModel : public QObject {
+class WorkspaceViewModel : public QObject
+{
     Q_OBJECT
     QML_ELEMENT
     QML_SINGLETON

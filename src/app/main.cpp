@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
     // Setting the default format as IniFormat to keep the settings in visible local path.
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
-    // service initializer called to create all the requried services.
+    // Service initializer called to create all the requried services.
     ServiceInitializer initializer;
     initializer.initialize();
 

@@ -32,6 +32,8 @@ private:
 
     QStateMachine* _machine;
     QString _currentState;
-    IWorkspaceService* _workspaceService; // Used for state logic, not UI
+
+    // Used for state logic, not UI
+    IWorkspaceService* _workspaceService;
 };
 #endif // APPCONTROLLER_H

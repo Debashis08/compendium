@@ -14,12 +14,14 @@ QString AppController::currentState() const {
 
 void AppController::setupStateMachine()
 {
-    this->_machine = new QStateMachine(this); // Pass 'this' as parent to avoid memory leaks
+    // Pass 'this' as parent to avoid memory leaks.
+    this->_machine = new QStateMachine(this);
 
     QState* initialState = new QState(this->_machine);
     QState* welcomeState = new QState(this->_machine);
     QState* workspaceState = new QState(this->_machine);
 
+    // Connect the states.
     connect(initialState, &QState::entered, this, [this] () {
         this->setCurrentState("initialState");
         QTimer::singleShot(AppConstants::Storage::LoadingScreenTime, this, &AppController::checkInitialWorkspace);
@@ -33,7 +35,7 @@ void AppController::setupStateMachine()
         this->setCurrentState("workspaceState");
     });
 
-    // State transitions
+    // State transitions.
     initialState->addTransition(this, &AppController::checkCompletedNeedsSetup, welcomeState);
     initialState->addTransition(this, &AppController::checkCompletedReady, workspaceState);
 
@@ -43,10 +45,13 @@ void AppController::setupStateMachine()
 
 void AppController::checkInitialWorkspace()
 {
-    // Delegate the logic to the injected service
-    if(this->_workspaceService && this->_workspaceService->hasValidWorkspace()) {
+    // Delegate the logic to the injected service.
+    if(this->_workspaceService && this->_workspaceService->hasValidWorkspace())
+    {
         emit this->checkCompletedReady();
-    } else {
+    }
+    else
+    {
         emit this->checkCompletedNeedsSetup();
     }
 }

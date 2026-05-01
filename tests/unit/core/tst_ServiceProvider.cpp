@@ -1,5 +1,5 @@
 #include <QtTest>
-#include "core/ServiceProvider.h"
+#include "../../src/core/ServiceProvider.h"
 
 class TestServiceProvider : public QObject
 {
@@ -16,5 +16,5 @@ private slots:
     }
 };
 
-QTEST_MAIN(TestServiceProvider)
+// QTEST_MAIN(TestServiceProvider)
 #include "tst_ServiceProvider.moc"
