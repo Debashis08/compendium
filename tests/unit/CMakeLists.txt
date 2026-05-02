@@ -25,6 +25,8 @@ add_executable(UnitTests
     backend/bridges/tst_AppController.cpp
     backend/bridges/tst_WorkspaceViewModel.cpp
 
+    backend/services/tst_WorkspaceService.cpp
+
     ${CMAKE_SOURCE_DIR}/src/app/ServiceInitializer.cpp
 )
 
