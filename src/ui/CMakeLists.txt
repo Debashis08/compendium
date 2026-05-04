@@ -17,6 +17,18 @@ qt_add_qml_module(UiLib
         pages/MainDashBoard.qml
         pages/WelcomeScreen.qml
         pages/WindowResizeBorders.qml
+
+
+    RESOURCES
+        compendium-qtquickcontrols2.conf
+        assets/icons/compendium.png
+        assets/icons/folder.png
+        assets/icons/google.png
+        assets/icons/local-system.png
+        assets/icons/menu.png
+        assets/icons/minimize.png
+        assets/icons/settings.png
+        assets/icons/trash.png
 )
 
 # Link the backend plugin so the UI can resolve the QML_ELEMENT types

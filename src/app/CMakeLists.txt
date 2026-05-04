@@ -7,7 +7,7 @@ qt_add_executable(compendium
     
     # We still include the legacy QRC file here if you aren't fully 
     # relying on qt_add_qml_module's native asset management yet.
-    ../ui/resources.qrc
+    #../ui/resources.qrc
 )
 
 # Embed the Qt Quick Controls configuration file
