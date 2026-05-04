@@ -33,7 +33,7 @@ Drawer {
 
             MenuButton {
                 text: "Files"
-                icon.source: "qrc:/assets/icons/folder.png"
+                icon.source: "../assets/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to Files.")
                     // root.close()
@@ -42,7 +42,7 @@ Drawer {
 
             MenuButton {
                 text: "Settings"
-                icon.source: "qrc:/assets/icons/settings.png"
+                icon.source: "../assets/icons/settings.png"
                 onClicked: {
                     console.log("Navigating to Settings.")
                     // root.close()
@@ -51,7 +51,7 @@ Drawer {
 
             MenuButton {
                 text: "Trash"
-                icon.source: "qrc:/assets/icons/trash.png"
+                icon.source: "../assets/icons/trash.png"
                 onClicked: {
                     console.log("Navigating to Trash.")
                     // sideDrawer.close()

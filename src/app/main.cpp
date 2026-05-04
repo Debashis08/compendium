@@ -8,11 +8,11 @@
 int main(int argc, char *argv[])
 {
     // Qt Quick Controls file.
-    qputenv("QT_QUICK_CONTROLS_CONF", ":/compendium-qtquickcontrols2.conf");
+    qputenv("QT_QUICK_CONTROLS_CONF", ":/qt/qml/App/Ui/compendium-qtquickcontrols2.conf");
     QGuiApplication app(argc, argv);
 
     // Setting the app icon.
-    app.setWindowIcon(QIcon(":/ui/icons/compendium.png"));
+    app.setWindowIcon(QIcon(":/qt/qml/App/Ui/assets/icons/compendium.png"));
 
     // This tells QSettings exactly where to save settings data permanently.
     QCoreApplication::setOrganizationName("Compendium");
