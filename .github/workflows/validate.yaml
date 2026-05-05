@@ -189,6 +189,9 @@ jobs:
           path: build
 
       - name: Run Unit Tests
+        env:
+          # Forces Qt to run without requiring a physical display/GPU
+          QT_QPA_PLATFORM: minimal 
         run: |
           cd build
-          ctest -C Release --output-on-failure
+          ctest -C Release --output-on-failure --parallel 4
