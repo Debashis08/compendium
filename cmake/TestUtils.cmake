@@ -26,9 +26,10 @@ function(add_compendium_unit_test TARGET_NAME)
         Qt6::Test
 
         # Your internal application libraries
+        AppLib
         CoreLib
         BackendLib
-        # Add BridgesLib here if you have one!
+
     )
 
     # 4. Automatically register the test with CTest (Google Test auto-discovery)

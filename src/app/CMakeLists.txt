@@ -1,13 +1,30 @@
 # src/app/CMakeLists.txt
 
-qt_add_executable(compendium
-    main.cpp
+# Create the App Library (Everything except main.cpp)
+add_library(AppLib STATIC
     ServiceInitializer.h
     ServiceInitializer.cpp
     
-    # We still include the legacy QRC file here if you aren't fully 
-    # relying on qt_add_qml_module's native asset management yet.
-    #../ui/resources.qrc
+)
+
+# Allow AppLib to see other headers in your project
+target_include_directories(AppLib PUBLIC ${CMAKE_SOURCE_DIR}/src)
+
+# Link all necessary underlying libraries to AppLib
+target_link_libraries(AppLib PUBLIC
+    Qt6::Quick
+    Qt6::QuickControls2
+    Qt6::StateMachine
+    CoreLib
+    BackendLib
+    BackendLibplugin
+    UiLib
+    UiLibplugin
+)
+
+# Create the executable (only main.cpp)
+qt_add_executable(compendium
+    main.cpp
 )
 
 # Embed the Qt Quick Controls configuration file
@@ -19,15 +36,7 @@ qt_add_resources(compendium "configuration"
 # Avoid opening a command prompt window on Windows
 set_target_properties(compendium PROPERTIES WIN32_EXECUTABLE ON)
 
-# The executable must link all underlying libraries and their QML plugins
-target_link_libraries(compendium
-    PRIVATE
-    Qt6::Quick
-    Qt6::QuickControls2
-    Qt6::StateMachine
-    CoreLib
-    BackendLib
-    BackendLibplugin
-    UiLib
-    UiLibplugin
+# Link our new AppLib to the executable so it can run
+target_link_libraries(compendium PRIVATE
+    AppLib
 )
