@@ -1,0 +1,2 @@
+add_subdirectory(bridges)
+add_subdirectory(services)
