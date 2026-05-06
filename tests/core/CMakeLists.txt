@@ -1,4 +1,6 @@
-add_compendium_unit_test(core_tests
+# tests/core/CMakeLists.txt
+
+add_compendium_unit_test(unit_tests_core
 
     tst_ServiceProvider.cpp
 )

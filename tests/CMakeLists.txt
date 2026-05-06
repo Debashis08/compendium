@@ -24,7 +24,7 @@ include(${CMAKE_SOURCE_DIR}/cmake/TestUtils.cmake)
 # IMPORTANT: Add the shared folder first so the custom main library is built
 add_subdirectory(shared)
 
-# Add all the mirrored test folders
+# Add all the test folders
 add_subdirectory(app)
 add_subdirectory(backend)
 add_subdirectory(core)
