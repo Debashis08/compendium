@@ -5,21 +5,8 @@ qt_add_executable(unit_tests_ui
     TestSetup.cpp
 )
 
-# 1. Find every .qml file in the current UI test directory
-file(GLOB QML_TEST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.qml")
-
-# 2. Loop through them and register each one as a separate CTest
-foreach(QML_FILE IN LISTS QML_TEST_FILES)
-    # Extract just the file name (e.g., gets "tst_WelcomeScreen" from "tst_WelcomeScreen.qml")
-    get_filename_component(TEST_NAME ${QML_FILE} NAME_WE)
-
-    # Register this specific QML file as its own test
-    # By passing the file path, the Qt Test runner will ONLY execute this file
-    add_test(
-        NAME "UiTest.${TEST_NAME}"
-        COMMAND unit_tests_ui ${QML_FILE}
-    )
-endforeach()
+# Explicitly register the executable with CTest
+add_test(NAME unit_tests_ui COMMAND unit_tests_ui)
 
 target_link_libraries(unit_tests_ui PRIVATE
     Qt6::Core
