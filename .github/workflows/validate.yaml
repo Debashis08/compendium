@@ -167,6 +167,16 @@ jobs:
       run:
         shell: pwsh
 
+    # Required by EnricoMi/publish-unit-test-result-action to post check runs
+    # and PR comments. Without these the action gets a 403 from the GitHub API.
+    # Note: if this workflow is called via workflow_call, the caller workflow
+    # must also declare these same permissions or the token will be restricted
+    # to the caller's (lower) permission level regardless of what is set here.
+    permissions:
+      checks: write        # create/update check runs (the inline PR annotations)
+      pull-requests: write # post the summary comment on the PR
+      contents: read       # checkout code
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
