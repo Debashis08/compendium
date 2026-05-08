@@ -166,7 +166,7 @@ jobs:
     defaults:
       run:
         shell: pwsh
-    
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -190,8 +190,23 @@ jobs:
 
       - name: Run Unit Tests
         env:
-          # Forces Qt to run without requiring a physical display/GPU
-          QT_QPA_PLATFORM: minimal 
+          QT_QPA_PLATFORM: minimal
         run: |
+          New-Item -ItemType Directory -Force -Path build/test-results | Out-Null
           cd build
-          ctest -C Release --output-on-failure
+          # --output-junit  →  produces JUnit XML consumed by the publish step below
+          # -T Test          →  also writes CTest's own XML to Testing/<timestamp>/
+          ctest -C Release `
+                --output-on-failure `
+                --no-compress-output `
+                -T Test `
+                --output-junit test-results/results.xml
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/windows@v2
+        # Always run so results appear even when tests fail
+        if: always()
+        with:
+          files: build/test-results/results.xml
+          check_name: "Qt Unit Test Results"
+          comment_title: "Qt Unit Test Results"
