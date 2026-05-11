@@ -1,9 +1,23 @@
+# tests/ui/CMakeLists.txt
+
 # Find necessary Qt Quick Test modules
 find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickTest)
 
 qt_add_executable(unit_tests_ui
     TestSetup.cpp
 )
+
+# Register the QML module so the Singleton and tests are recognized
+qt_add_qml_module(unit_tests_ui
+    URI App.Ui.Tests
+    VERSION 1.0
+    QML_FILES
+        # Register utility singleton
+        utils/UiTestHelper.qml
+
+        # Register unit test files
+        components/tst_AppToolbar.qml
+    )
 
 # Explicitly register the executable with CTest
 add_test(NAME unit_tests_ui COMMAND unit_tests_ui)

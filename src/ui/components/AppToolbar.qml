@@ -15,6 +15,7 @@ Rectangle {
 
         Button {
             id: menuButton
+            objectName: "menuButton"
             icon.source: "../assets/icons/menu.png"
 
             // Base sizes on the component's height/width
