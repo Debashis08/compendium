@@ -17,6 +17,7 @@ qt_add_qml_module(unit_tests_ui
 
         # Register unit test files
         components/tst_AppToolbar.qml
+        components/tst_MenuButton.qml
     )
 
 # Explicitly register the executable with CTest
