@@ -24,6 +24,7 @@ Drawer {
 
             MenuButton {
                 text: WorkspaceViewModel.workspaceName
+                bgRadius: 4
                 // icon.source: "qrc:/assets/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to workspace.")
@@ -33,6 +34,7 @@ Drawer {
 
             MenuButton {
                 text: "Files"
+                bgRadius: 4
                 icon.source: "../assets/icons/folder.png"
                 onClicked: {
                     console.log("Navigating to Files.")
@@ -42,6 +44,7 @@ Drawer {
 
             MenuButton {
                 text: "Settings"
+                bgRadius: 4
                 icon.source: "../assets/icons/settings.png"
                 onClicked: {
                     console.log("Navigating to Settings.")
@@ -51,6 +54,7 @@ Drawer {
 
             MenuButton {
                 text: "Trash"
+                bgRadius: 4
                 icon.source: "../assets/icons/trash.png"
                 onClicked: {
                     console.log("Navigating to Trash.")
