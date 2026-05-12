@@ -1,13 +1,14 @@
 ; Script generated for Qt Quick Application
-; Located at: installer/setup.iss
+; Located at: packaging/windows/windows-setup.iss
 
 #define MyAppName "compendium"
 #define MyAppPublisher "My Company"
 #define MyAppExeName "compendium.exe"
 
 ; Default value for local testing. In CI, this is overwritten via command line.
+; Updated to step back two directories (packaging/windows) to reach the project root
 #ifndef MyAppSourceDir
-  #define MyAppSourceDir "..\build\release"
+  #define MyAppSourceDir "..\..\build\release"
 #endif
 
 #ifndef MyAppVersion
@@ -19,14 +20,13 @@
 #endif
 
 [Setup]
-AppId={{A1B2C3D4-E5F6-7890-1234-56789ABCDEF0}}
+AppId={{A1B2C3D4-E5F6-7890-1234-2c0m2p6d05}}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 
 ; --- CRITICAL CHANGE FOR LOGGING ---
-; Old: DefaultDirName={autopf}\{#MyAppName}
-; New: Installs to C:\Users\<Name>\AppData\Local\compendium
+; Installs to C:\Users\<Name>\AppData\Local\compendium
 DefaultDirName={localappdata}\{#MyAppName}
 
 ; Ensure we don't ask for Admin password (since we are installing to user folder)
@@ -36,6 +36,7 @@ PrivilegesRequired=lowest
 DefaultGroupName={#MyAppName}
 
 ; Output configuration
+; You can also change this to "..\..\Output" if you want the installer built at the project root
 OutputDir=Output
 OutputBaseFilename={#MyOutputFilename}
 Compression=lzma

@@ -105,16 +105,16 @@ echo %BLUE%Step 5: Creating Runnable App Folder%RESET%
 
 if not exist "%LOCAL_APP_DIR%" mkdir "%LOCAL_APP_DIR%"
 
-:: fix: Added "\src\" because CMake places the binary there
-if not exist "%BUILD_DIR%\src\%APP_NAME%" (
+:: fix: Updated to "\src\app\" to match the new layered architecture
+if not exist "%BUILD_DIR%\src\app\%APP_NAME%" (
     echo %RED%[ERROR] File not found:%RESET%
-    echo %RED%        %BUILD_DIR%\src\%APP_NAME%%RESET%
+    echo %RED%        %BUILD_DIR%\src\app\%APP_NAME%%RESET%
     echo %RED%Please verify the output directory or target name.%RESET%
     pause
     exit /b 1
 )
 
-copy /Y "%BUILD_DIR%\src\%APP_NAME%" "%LOCAL_APP_DIR%\%APP_NAME%"
+copy /Y "%BUILD_DIR%\src\app\%APP_NAME%" "%LOCAL_APP_DIR%\%APP_NAME%"
 
 echo.
 echo %BLUE%Step 6: Running Windeployqt (Dependency Injection)%RESET%
