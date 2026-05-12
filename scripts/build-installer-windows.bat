@@ -32,8 +32,8 @@ set "APP_NAME=compendium.exe"
 :: [CHANGED] Inno Setup output filename (No .exe extension here, Inno adds it)
 set "INSTALLER_BASENAME=compendium-installer-Windows-x64"
 
-:: [CHANGED] Path to your new .iss file
-set "ISS_SCRIPT=%SOURCE_DIR%\installer\windows-setup.iss"
+:: [FIXED] Path updated to match the new packaging/windows/ folder structure
+set "ISS_SCRIPT=%SOURCE_DIR%\packaging\windows\windows-setup.iss"
 
 :: Build & output paths (outside repo root)
 for %%I in ("%REPO_ROOT%\..\compendium-local-build") do set "BUILD_ROOT=%%~fI"
@@ -118,16 +118,16 @@ echo %BLUE%Step 5: Creating Runnable App Folder%RESET%
 
 if not exist "%LOCAL_APP_DIR%" mkdir "%LOCAL_APP_DIR%"
 
-:: fix: Added "\src\" because CMake places the binary there
-if not exist "%BUILD_DIR%\src\%APP_NAME%" (
+:: [FIXED] Updated path to "\src\app\" because CMake places the app binary there now
+if not exist "%BUILD_DIR%\src\app\%APP_NAME%" (
     echo %RED%[ERROR] File not found:%RESET%
-    echo %RED%        %BUILD_DIR%\src\%APP_NAME%%RESET%
+    echo %RED%        %BUILD_DIR%\src\app\%APP_NAME%%RESET%
     echo %RED%Please verify the output directory or target name.%RESET%
     pause
     exit /b 1
 )
 
-copy /Y "%BUILD_DIR%\src\%APP_NAME%" "%LOCAL_APP_DIR%\%APP_NAME%"
+copy /Y "%BUILD_DIR%\src\app\%APP_NAME%" "%LOCAL_APP_DIR%\%APP_NAME%"
 
 echo.
 echo %BLUE%Step 6: Running Windeployqt (Dependency Injection)%RESET%

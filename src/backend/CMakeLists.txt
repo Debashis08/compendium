@@ -2,8 +2,15 @@
 
 # Load Secrets & Environment Variables (Optional)
 include("${CMAKE_SOURCE_DIR}/Secrets.local.cmake" OPTIONAL)
-set(GOOGLE_CLIENT_ID "$ENV{GOOGLE_CLIENT_ID}")
-set(GOOGLE_CLIENT_SECRET "$ENV{GOOGLE_CLIENT_SECRET}")
+
+# Only pull from environment variables if the local secrets file didn't set them
+if(NOT GOOGLE_CLIENT_ID)
+    set(GOOGLE_CLIENT_ID "$ENV{GOOGLE_CLIENT_ID}")
+endif()
+
+if(NOT GOOGLE_CLIENT_SECRET)
+    set(GOOGLE_CLIENT_SECRET "$ENV{GOOGLE_CLIENT_SECRET}")
+endif()
 
 if(NOT GOOGLE_CLIENT_ID OR NOT GOOGLE_CLIENT_SECRET)
     message(WARNING "BackendLib: Google OAuth keys are missing. Auth will not work.")
