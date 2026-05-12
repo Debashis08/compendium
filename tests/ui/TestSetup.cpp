@@ -26,6 +26,19 @@ struct StyleConfig
 };
 static StyleConfig styleConfig;
 
+// struct EnvConfig
+// {
+//     EnvConfig() {
+//         // Force the fallback styling
+//         qputenv("QT_QUICK_CONTROLS_STYLE", "Basic");
+
+//         // CRITICAL FIX: Forces Qt to render headlessly into a memory buffer.
+//         // This prevents the instant exit code 1 crash on GitHub Actions servers.
+//         qputenv("QT_QPA_PLATFORM", "offscreen");
+//     }
+// };
+// static EnvConfig envConfig;
+
 class Setup : public QObject
 {
     Q_OBJECT
