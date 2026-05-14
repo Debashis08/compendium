@@ -24,14 +24,13 @@ core:
 installer:
   - changed-files:
       - any-glob-to-any-file: 'packaging/**'
-      - any-glob-to-any-file: 'scripts/**'
 
 # Build system changes
 build-system:
   - changed-files:
-      - any-glob-to-any-file: '**/CMakeLists.txt'
-      - any-glob-to-any-file: 'cmake/**'
-      - any-glob-to-any-file: 'scripts/build-app*.bat'
+      - all-globs-to-all-files: '**/CMakeLists.txt'
+      - all-globs-to-all-files: 'cmake/**'
+      - all-globs-to-all-files: 'scripts/**'
 
 # Workflow changes
 workflows:
