@@ -42,7 +42,8 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       
       - name: Install Qt (Deploy Tool)
         uses: jurplel/install-qt-action@v3
@@ -109,7 +110,8 @@ jobs:
       run:
         shell: pwsh
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout Repository
+        uses: actions/checkout@v4
       
       # 1. Install Inno Setup via Chocolatey
       - name: Install Inno Setup
