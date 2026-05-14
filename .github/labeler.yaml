@@ -3,40 +3,35 @@ ui:
   - changed-files:
       - any-glob-to-any-file: 'src/ui/**'
       - any-glob-to-any-file: 'tests/ui/**'
-      - any-glob-to-any-file: '*.qrc'
-      - any-glob-to-any-file: '*.conf'
+      - any-glob-to-any-file: '**/*.conf'
 
-# Backend changes — any-glob fires it, all-globs block it if core files are present
+# Backend changes
 backend:
-  - all:
-    - changed-files:
-        - any-glob-to-any-file:
-            - 'src/backend/**'
-            - 'tests/backend/**'
-    - changed-files:
-        - all-globs-to-all-files:
-            - '!src/backend/core/**'
-            - '!tests/backend/core/**'
+  - changed-files:
+      - any-glob-to-any-file: 'src/backend/**'
+      - any-glob-to-any-file: 'tests/backend/**'
 
 # Core Infrastructure changes
 core:
   - changed-files:
-      - any-glob-to-any-file: 'src/backend/core/**'
-      - any-glob-to-any-file: 'tests/backend/core/**'
+      - any-glob-to-any-file: 'src/core/**'
+      - any-glob-to-any-file: 'tests/core/**'
+      - any-glob-to-any-file: 'tests/shared/**'
+      - any-glob-to-any-file: 'src/app/**'
+      - any-glob-to-any-file: 'tests/app/**'
 
-# Installer changes
+# Installer and Deployment changes
 installer:
   - changed-files:
-      - any-glob-to-any-file: 'installer/**'
+      - any-glob-to-any-file: 'packaging/**'
+      - any-glob-to-any-file: 'scripts/**'
 
-# Build system changes — only fires when every changed file is a cmake file
+# Build system changes
 build-system:
   - changed-files:
-      - all-globs-to-all-files: '**/CMakeLists.txt'
-  - changed-files:
-      - all-globs-to-all-files: '**/*.cmake'
-  - changed-files:
-      - all-globs-to-all-files: 'scripts/**'
+      - any-glob-to-any-file: '**/CMakeLists.txt'
+      - any-glob-to-any-file: 'cmake/**'
+      - any-glob-to-any-file: 'scripts/build-app*.bat'
 
 # Workflow changes
 workflows:
@@ -46,4 +41,5 @@ workflows:
 # Documentation changes
 documentation:
   - changed-files:
+      - any-glob-to-any-file: 'docs/**'
       - any-glob-to-any-file: '*.md'

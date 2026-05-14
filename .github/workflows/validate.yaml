@@ -67,7 +67,7 @@ jobs:
     needs: validate-branch-policy
     runs-on: windows-2022 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Linter
         shell: pwsh
@@ -168,7 +168,7 @@ jobs:
         shell: pwsh
     
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup MSVC
