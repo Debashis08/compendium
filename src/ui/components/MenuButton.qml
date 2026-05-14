@@ -5,6 +5,8 @@ import QtQuick.Layouts
 Button {
     id: rootButton
 
+    property real bgRadius: 0
+
     // 1. Fill the width so the hover effect covers the whole menu row
     Layout.fillWidth: true
 
@@ -48,10 +50,10 @@ Button {
 
     // 5. Updated Background (Dark tints for white backgrounds)
     background: Rectangle {
-        radius: 0 // Soft rounded corners for a modern look
+        radius: rootButton.bgRadius
         color: {
-            if (rootButton.hovered) {
-                return "#f2f2f2" // Very faint gray when hovered
+            if (rootButton.down || rootButton.hovered) {
+                return "#e6e6e6" // Very faint gray when hovered
             } else {
                 return "transparent"
             }

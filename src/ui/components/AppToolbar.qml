@@ -15,7 +15,8 @@ Rectangle {
 
         Button {
             id: menuButton
-            icon.source: "qrc:/ui/icons/menu.png"
+            objectName: "menuButton"
+            icon.source: "../assets/icons/menu.png"
 
             // Base sizes on the component's height/width
             icon.width: root.width * 0.03

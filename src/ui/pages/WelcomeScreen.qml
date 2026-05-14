@@ -9,11 +9,13 @@ Item {
     // 1. Ensure the root item explicitly fills its container (the Loader)
     anchors.fill: parent
 
-    property var backendController: ServiceProvider.appController
+    // --- THE FIX ---
+    // Removed the old 'ServiceProvider' property completely.
+    // We now rely purely on the decoupled ViewModel Singleton!
 
     function processSelectedWorkspace(folderUrl) {
-        // 2. USE THE INJECTED PROPERTY
-        root.backendController.setWorkspacePath(folderUrl)
+        // Route the action directly to the C++ ViewModel
+        WorkspaceViewModel.setWorkspacePath(folderUrl)
     }
 
     Column {
@@ -88,9 +90,8 @@ Item {
 
                     Image {
                         id: localSystemIcon
-                        // Replace this with the actual path to your icon
-                        // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
-                        source: "qrc:/ui/icons/local-system.png"
+                        // Use relative path to avoid resource resolution issues during testing
+                        source: "../assets/icons/local-system.png"
 
                         width: parent.width * 0.14  // Set desired icon width
                         height: parent.width * 0.14  // Set desired icon height
@@ -144,9 +145,8 @@ Item {
 
                     Image {
                         id: googleIcon
-                        // Replace this with the actual path to your icon
-                        // e.g., "qrc:/images/google_logo.png" or "file:///path/to/icon.png"
-                        source: "qrc:/ui/icons/google.png"
+                        // Use relative path to avoid resource resolution issues during testing
+                        source: "../assets/icons/google.png"
 
                         width: parent.width * 0.14  // Set desired icon width
                         height: parent.width * 0.14  // Set desired icon height
@@ -179,7 +179,7 @@ Item {
         title: "Select local workspace"
 
         onAccepted: {
-                    root.processSelectedWorkspace(workspaceDialog.selectedFolder)
-                }
+            root.processSelectedWorkspace(workspaceDialog.selectedFolder)
+        }
     }
 }

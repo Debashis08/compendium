@@ -67,7 +67,7 @@ jobs:
     needs: validate-branch-policy
     runs-on: windows-2022 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
       - name: Run Linter
         shell: pwsh
@@ -168,7 +168,7 @@ jobs:
         shell: pwsh
     
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup MSVC
@@ -189,6 +189,9 @@ jobs:
           path: build
 
       - name: Run Unit Tests
+        env:
+          # Forces Qt to run without requiring a physical display/GPU
+          QT_QPA_PLATFORM: minimal 
         run: |
           cd build
           ctest -C Release --output-on-failure

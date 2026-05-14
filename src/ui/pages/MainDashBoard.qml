@@ -30,7 +30,7 @@ Item {
 
         Text {
             anchors.centerIn: parent
-            text: "Main Dashboard\n" + (ServiceProvider.appController ? ServiceProvider.appController.workspacePath : "")
+            text: "Main Dashboard\n" + WorkspaceViewModel.workspacePath
             font.pixelSize: 20
             color: "black"
             horizontalAlignment: Text.AlignHCenter

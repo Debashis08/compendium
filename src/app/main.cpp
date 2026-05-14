@@ -1,16 +1,18 @@
 #include <QIcon>
 #include <QGuiApplication>
+#include <QSettings>
+#include <QQmlContext>
 #include <QQmlApplicationEngine>
-#include "core/ServiceInitializer.h"
+#include "ServiceInitializer.h"
 
 int main(int argc, char *argv[])
 {
     // Qt Quick Controls file.
-    qputenv("QT_QUICK_CONTROLS_CONF", ":/compendium-qtquickcontrols2.conf");
+    qputenv("QT_QUICK_CONTROLS_CONF", ":/qt/qml/App/Ui/compendium-qtquickcontrols2.conf");
     QGuiApplication app(argc, argv);
 
     // Setting the app icon.
-    app.setWindowIcon(QIcon(":/ui/icons/compendium.png"));
+    app.setWindowIcon(QIcon(":/qt/qml/App/Ui/assets/icons/compendium.png"));
 
     // This tells QSettings exactly where to save settings data permanently.
     QCoreApplication::setOrganizationName("Compendium");
@@ -20,11 +22,12 @@ int main(int argc, char *argv[])
     // Setting the default format as IniFormat to keep the settings in visible local path.
     QSettings::setDefaultFormat(QSettings::IniFormat);
 
-    // service initializer called to create all the requried services.
+    // Service initializer called to create all the requried services.
     ServiceInitializer initializer;
     initializer.initialize();
 
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("appOrchestrator", initializer.getAppController());
 
     engine.addImportPath(":/qt/qml");
     engine.loadFromModule("App.Ui", "Main");

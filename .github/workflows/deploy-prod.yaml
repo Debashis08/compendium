@@ -171,16 +171,16 @@ jobs:
           Write-Host "Inno Source Dir: $absSourceDir"
 
           # Run Inno Setup Compiler
-          # We pass /DMyAppVersion so the Windows Installer shows the correct version
+          # [FIXED] Point to the new packaging/windows script
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
             "/DMyAppSourceDir=$absSourceDir" `
             "/DMyAppExeName=$env:APP_EXECUTABLE" `
             "/DMyOutputFilename=$installerName" `
             "/DMyAppVersion=$versionClean" `
-            installer/windows-setup.iss
+            packaging\windows\windows-setup.iss
           
-          # Check result
-          if (Test-Path "installer/Output/$installerName.exe") {
+          # [FIXED] Output path is now relative to the new .iss file location
+          if (Test-Path "packaging/windows/Output/$installerName.exe") {
              Write-Host "Installer created successfully."
           } else {
              Write-Error "Installer generation failed."
@@ -191,7 +191,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: installer-package
-          path: installer/Output/*.exe
+          # [FIXED] Capture artifacts from the correct new Output directory
+          path: packaging/windows/Output/*.exe
           retention-days: 10
 
   # job 4: produce github tag and release
@@ -203,8 +204,9 @@ jobs:
       contents: write
       pull-requests: read # REQUIRED: Allows release-drafter to read PR labels
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Download Installer
         uses: actions/download-artifact@v4
         with:

@@ -20,7 +20,7 @@ Window {
         // 2. BIND STATE TO C++
         // This is the magic line. It listens to the C++ State Machine.
         // If AppController sets state to "Welcome", this QML state automatically updates.
-        state: ServiceProvider.appController ? ServiceProvider.appController.currentState : "initialState"
+        state: appOrchestrator.currentState
 
         // 3. THE LOADER
         Loader {

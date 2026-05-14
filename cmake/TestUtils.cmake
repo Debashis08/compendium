@@ -1,18 +1,39 @@
-function(add_backend_test test_name file_path)
-    add_executable(${test_name} ${file_path})
+# cmake/TestUtils.cmake
 
-    target_link_libraries(${test_name} 
-        PRIVATE 
+function(add_compendium_unit_test TARGET_NAME)
+    # The ARGN variable captures all arguments passed after TARGET_NAME (i.e., your source files)
+    set(SOURCES ${ARGN})
+
+    # 1. Create the executable
+    add_executable(${TARGET_NAME} ${SOURCES})
+
+    # 2. Allow tests to see the src headers and our central mocks folder
+    target_include_directories(${TARGET_NAME} PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        ${CMAKE_SOURCE_DIR}/tests/mocks
+    )
+
+    # 3. Link all common dependencies every test needs
+    target_link_libraries(${TARGET_NAME} PRIVATE
+        # Google Test Core
+        GTest::gtest GTest::gmock
+
+        # Our custom main() containing the Qt initialization
+        SharedTestMain
+
+        # Qt Dependencies
+        Qt6::Core
         Qt6::Test
-        Qt6::Qml
-        BackendLib 
-        BackendLibplugin
+
+        # Your internal application libraries
+        AppLib
+        CoreLib
+        BackendLib
+
     )
 
-    target_include_directories(${test_name} 
-        PRIVATE 
-        ${CMAKE_SOURCE_DIR}/src/backend
-    )
-
-    add_test(NAME ${test_name} COMMAND ${test_name})
+    # 4. Automatically register the test with CTest (Google Test auto-discovery)
+    include(GoogleTest)
+    # DISCOVERY_MODE PRE_TEST prevents CMake from running the exe during the build phase
+    gtest_discover_tests(${TARGET_NAME} DISCOVERY_MODE PRE_TEST)
 endfunction()
