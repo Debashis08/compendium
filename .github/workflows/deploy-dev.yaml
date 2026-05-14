@@ -129,18 +129,19 @@ jobs:
           $installerName = "compendium-dev-installer-$ts"
           
           # 1. Get the Absolute Path to the staged-data folder
-          # This prevents the "installer/staged-data" path error
           $absSourceDir = (Resolve-Path "staged-data").Path
           Write-Host "Inno Source Dir: $absSourceDir"
 
           # 2. Run Compiler with Absolute Path AND Enforced Exe Name
+          # [FIXED] Pointed to packaging\windows\windows-setup.iss
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
             "/DMyAppSourceDir=$absSourceDir" `
             "/DMyAppExeName=$env:APP_EXECUTABLE" `
             "/DMyOutputFilename=$installerName" `
-            installer/windows-setup.iss
+            packaging\windows\windows-setup.iss
           
-          if (Test-Path "installer/Output/$installerName.exe") {
+          # [FIXED] Output path is now relative to the new .iss file location
+          if (Test-Path "packaging/windows/Output/$installerName.exe") {
              Write-Host "Installer created successfully."
           } else {
              Write-Error "Installer generation failed."
@@ -151,5 +152,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: compendium-dev-installer-${{ needs.generate-timestamp.outputs.ts }}
-          path: installer/Output/*.exe
+          # [FIXED] Capture artifacts from the correct new Output directory
+          path: packaging/windows/Output/*.exe
           retention-days: 5
